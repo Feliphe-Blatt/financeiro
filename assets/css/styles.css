@@ -1,0 +1,21 @@
+
+#sidebar.collapsed {
+  width: 60px;
+}
+#sidebar .nav-link {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#sidebar.collapsed .nav-link span {
+  display: none;
+}
+#sidebar.collapsed .sidebar-header span {
+  display: none;
+}
+
+#piechart {
+  display: flex;
+  width: fit-content;
+  height: 500px;
+}

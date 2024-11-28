@@ -11,19 +11,30 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="stylesheet" href="./assets/css/styles.css">
   <style>
-    #sidebar.collapsed {
-      width: 60px;
+    #chart-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    #sidebar .nav-link {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    #pie-chart {
+      flex: 1;
+      display: flex;
+      justify-content: center;
     }
-    #sidebar.collapsed .nav-link span {
-      display: none;
+    #legend {
+      flex: 1;
+      margin-left: 20px;
     }
-    #sidebar.collapsed .sidebar-header span {
-      display: none;
+    .legend-item {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .legend-item.active div {
+      border: 1px solid black; /* Ajustar espessura da borda */
+    }
+    .legend-item.inactive div {
+      opacity: 0.5;
     }
   </style>
 </head>
@@ -87,7 +98,101 @@
               <h2>Balance</h2>
             </div>
             <div class="card-body">
-              <!-- Your content here -->
+              <div id="chart-container">
+                <div id="pie-chart"></div>
+                <div id="legend"></div>
+              </div>
+
+              <script>
+                const data = [
+                  { label: 'Rent', value: 500 },
+                  { label: 'Groceries', value: 300 },
+                  { label: 'Utilities', value: 200 },
+                  { label: 'Entertainment', value: 100 }
+                ];
+
+                const width = 450;
+                const height = 450;
+                const margin = 40;
+
+                const radius = Math.min(width, height) / 2 - margin;  
+
+                const svg = d3.select("#pie-chart")
+                  .append("svg")
+                  .attr("width", width)
+                  .attr("height", height)
+                  .append("g")
+                  .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+                const color = d3.scaleOrdinal()
+                  .domain(data.map(d => d.label))
+                  .range(d3.schemeCategory10);
+
+                const selectedLabels = new Set(data.map(d => d.label));
+
+                const arc = d3.arc()
+                  .innerRadius(130)
+                  .outerRadius(radius);
+
+                const pie = d3.pie()
+                  .sort(null)
+                  .value(d => d.value);
+
+                const updateChart = () => {
+                  const filteredData = data.filter(d => selectedLabels.has(d.label));
+                  const data_ready = pie(filteredData);
+
+                  const path = svg
+                    .selectAll('path')
+                    .data(data_ready, d => d.data.label);
+
+                  path.join(
+                    enter => enter.append('path')
+                      .attr('fill', d => color(d.data.label))
+                      .attr("stroke", "black")
+                      .style("stroke-width", "0.5px") // Ajustar espessura da borda
+                      .style("opacity", 0.7)
+                      .style("stroke-linejoin", "round")
+                      .each(function(d) { this._current = d; }), // store the initial angles
+                    update => update,
+                    exit => exit.remove()
+                  )
+                  .transition()
+                  .duration(750)
+                  .attrTween("d", arcTween);
+
+                  legend.selectAll("li")
+                    .data(data)
+                    .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive");
+                };
+
+                function arcTween(a) {
+                  const i = d3.interpolate(this._current, a);
+                  this._current = i(0);
+                  return (t) => arc(i(t));
+                }
+
+                const legend = d3.select("#legend")
+                  .append("ul")
+                  .style("list-style", "none");
+
+                legend.selectAll("li")
+                  .data(data)
+                  .enter()
+                  .append("li")
+                  .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive")
+                  .html(d => `<div style="width: 20px; height: 20px; background-color: ${color(d.label)}; margin-right: 10px;"></div>${d.label}`)
+                  .on("click", function(event, d) {
+                    if (selectedLabels.has(d.label)) {
+                      selectedLabels.delete(d.label);
+                    } else {
+                      selectedLabels.add(d.label);
+                    }
+                    updateChart();
+                  });
+
+                updateChart();
+              </script>
             </div>
           </div>
         </div>
@@ -95,11 +200,6 @@
     </main>
   </div>
 
-  <script>
-    document.getElementById('sidebarToggler').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
-    });
-  </script>
   <script src="./assets/js/index.js"></script>
 </body>
 </html>

@@ -220,3 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   rendaForm.onsubmit = adicionarRenda;
 });
+
+document.getElementById('sidebarToggler').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+  });
