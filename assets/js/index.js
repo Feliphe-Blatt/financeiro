@@ -221,6 +221,13 @@ document.addEventListener('DOMContentLoaded', () => {
   rendaForm.onsubmit = adicionarRenda;
 });
 
-document.getElementById('sidebarToggler').addEventListener('click', function() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggler = document.getElementById('sidebarToggler');
+  // Eu adicionei essa linha de código para consertar o problema de a sidebar abrir sempre que o index é carregado.
+    sidebar.classList.add('collapsed');
+  
+    sidebarToggler.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
   });
