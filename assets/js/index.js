@@ -231,3 +231,174 @@ document.addEventListener('DOMContentLoaded', () => {
       sidebar.classList.toggle('collapsed');
     });
   });
+
+  // Linha para 'hiddar' o balance
+  document.addEventListener('DOMContentLoaded', () => {
+    const balanceAmount = document.getElementById('balance-amount');
+    const toggleBalanceButton = document.getElementById('toggle-balance');
+    const eyeIcon = document.getElementById('eye-icon');
+    let isBalanceHidden = false;
+     let balance = 0; // Valor inicial do saldo
+
+     //transforma o 'bi-eye' em 'bi-eye-slash' e vice-versa
+  
+    toggleBalanceButton.addEventListener('click', () => {
+      if (isBalanceHidden) {
+        balanceAmount.textContent = `${balance.toFixed(2)}R$`;
+        eyeIcon.classList.remove('bi-eye-slash');
+        eyeIcon.classList.add('bi-eye');
+      } else {
+        balanceAmount.textContent = '...';
+        eyeIcon.classList.remove('bi-eye');
+        eyeIcon.classList.add('bi-eye-slash');
+      }
+      isBalanceHidden = !isBalanceHidden;
+    });
+  
+    const transactionForm = document.getElementById('add-transaction-form');
+    const transactionList = document.getElementById('transaction-list');
+    const transactionType = document.getElementById('transaction-type');
+    const transactionSpecification = document.getElementById('transaction-specification');
+
+    const rendaOptions = ['Fixa', 'Adicional'];
+    const despesaOptions = ['Rent', 'Groceries', 'Utilities', 'Entertainment'];
+  
+    function updateSpecificationOptions() {
+    const selectedType = transactionType.value;
+    let options = [];
+
+    if (selectedType === 'renda') {
+      options = rendaOptions;
+    } else if (selectedType === 'despesa') {
+      options = despesaOptions;
+    }
+    else {
+        options = [];
+    }
+
+    transactionSpecification.innerHTML = '';
+    options.forEach(option => {
+      const optionElement = document.createElement('option');
+      optionElement.value = option.toLowerCase();
+      optionElement.textContent = option;
+      transactionSpecification.appendChild(optionElement);
+    });
+  }
+
+  // Atualizar as opções de especificação ao carregar a página
+  updateSpecificationOptions();
+
+  // Atualizar as opções de especificação ao mudar o tipo de transação
+  transactionType.addEventListener('change', updateSpecificationOptions);
+
+  transactionForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const transactionTypeValue = transactionType.value;
+    const transactionSpecificationValue = transactionSpecification.value;
+    const transactionAmount = parseFloat(document.getElementById('transaction-amount').value);
+
+    if (transactionTypeValue === 'renda') {
+      balance += transactionAmount;
+    } else if (transactionTypeValue === 'despesa') {
+      balance -= transactionAmount;
+    }
+
+    const listItem = document.createElement('li');
+    listItem.className = 'list-group-item';
+    listItem.textContent = `${transactionTypeValue === 'renda' ? 'Renda' : 'Despesa'} (${transactionSpecificationValue}): ${transactionAmount.toFixed(2)}R$`;
+    transactionList.appendChild(listItem);
+
+    balanceAmount.textContent = `${balance.toFixed(2)}R$`;
+    transactionForm.reset();
+    updateSpecificationOptions(); // Resetar as opções de especificação
+  });
+
+    const data = [
+        { label: 'Rent', value: 500 },
+        { label: 'Groceries', value: 300 },
+        { label: 'Utilities', value: 200 },
+        { label: 'Entertainment', value: 100 }
+      ];
+
+      const width = 450;
+      const height = 450;
+      const margin = 40;
+
+      const radius = Math.min(width, height) / 2 - margin;  
+
+      const svg = d3.select("#pie-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+      const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.label))
+        .range(d3.schemeCategory10);
+
+      const selectedLabels = new Set(data.map(d => d.label));
+
+      const arc = d3.arc()
+        .innerRadius(130)
+        .outerRadius(radius);
+
+      const pie = d3.pie()
+        .sort(null)
+        .value(d => d.value);
+
+      const updateChart = () => {
+        const filteredData = data.filter(d => selectedLabels.has(d.label));
+        const data_ready = pie(filteredData);
+
+        const path = svg
+          .selectAll('path')
+          .data(data_ready, d => d.data.label);
+
+        path.join(
+          enter => enter.append('path')
+            .attr('fill', d => color(d.data.label))
+            .attr("stroke", "black")
+            .style("stroke-width", "0.5px") // Ajustar espessura da borda
+            .style("opacity", 0.7)
+            .style("stroke-linejoin", "round")
+            .each(function(d) { this._current = d; }), // store the initial angles
+          update => update,
+          exit => exit.remove()
+        )
+        .transition()
+        .duration(750)
+        .attrTween("d", arcTween);
+
+        legend.selectAll("li")
+          .data(data)
+          .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive");
+      };
+
+      function arcTween(a) {
+        const i = d3.interpolate(this._current, a);
+        this._current = i(0);
+        return (t) => arc(i(t));
+      }
+
+      const legend = d3.select("#legend")
+        .append("ul")
+        .style("list-style", "none");
+
+      legend.selectAll("li")
+        .data(data)
+        .enter()
+        .append("li")
+        .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive")
+        .html(d => `<div style="width: 20px; height: 20px; background-color: ${color(d.label)}; margin-right: 10px;"></div>${d.label}`)
+        .on("click", function(event, d) {
+          if (selectedLabels.has(d.label)) {
+            selectedLabels.delete(d.label);
+          } else {
+            selectedLabels.add(d.label);
+          }
+          updateChart();
+        });
+
+      updateChart();
+  });

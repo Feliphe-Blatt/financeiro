@@ -66,12 +66,58 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <div class="card" style="display: flex; ">
+        <div class="col-6">
+          <div class="card">
             <div class="card-header">
-              <h2 style="display: flex;">Balance</h2>
-              <h3 style="display: flex; align-items: end;">888,88R$</h3>
+              <h2>Balance</h2>
+              <div class="balance-container">
+                <h3 id="balance-amount">00,00$</h3>
+                <button id="toggle-balance" class="btn btn-link">
+                  <i class="bi bi-eye" id="eye-icon"></i>
+                </button>
+              </div>
             </div>
+            <div class="card-body">
+              <div id="chart-container">
+                <div id="pie-chart"></div>
+                <div id="legend"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <div id="transaction-form">
+                <h3>Adicionar Transação</h3>
+                <form id="add-transaction-form">
+                  <div class="mb-3">
+                    <label for="transaction-type" class="form-label">Tipo</label>
+                    <select id="transaction-type" class="form-select">
+                      <option value="nothing"></option>
+                      <option value="renda">Renda</option>
+                      <option value="despesa">Despesa</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="transaction-specification" class="form-label">Especificação</label>
+                    <select id="transaction-specification" class="form-select">
+                    </select>
+                  <div class="mb-3">
+                    <label for="transaction-amount" class="form-label">Valor</label>
+                    <input type="number" id="transaction-amount" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Adicionar</button>
+                </form>
+              </div>
+              <div id="transaction-history">
+                <h3>Histórico de Transações</h3>
+                <ul id="transaction-list" class="list-group"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
             <div class="card-body">
               <div id="chart-container">
                 <div id="pie-chart"></div>
@@ -79,94 +125,7 @@
               </div>
 
               <script>
-                const data = [
-                  { label: 'Rent', value: 500 },
-                  { label: 'Groceries', value: 300 },
-                  { label: 'Utilities', value: 200 },
-                  { label: 'Entertainment', value: 100 }
-                ];
-
-                const width = 450;
-                const height = 450;
-                const margin = 40;
-
-                const radius = Math.min(width, height) / 2 - margin;  
-
-                const svg = d3.select("#pie-chart")
-                  .append("svg")
-                  .attr("width", width)
-                  .attr("height", height)
-                  .append("g")
-                  .attr("transform", `translate(${width / 2}, ${height / 2})`);
-
-                const color = d3.scaleOrdinal()
-                  .domain(data.map(d => d.label))
-                  .range(d3.schemeCategory10);
-
-                const selectedLabels = new Set(data.map(d => d.label));
-
-                const arc = d3.arc()
-                  .innerRadius(130)
-                  .outerRadius(radius);
-
-                const pie = d3.pie()
-                  .sort(null)
-                  .value(d => d.value);
-
-                const updateChart = () => {
-                  const filteredData = data.filter(d => selectedLabels.has(d.label));
-                  const data_ready = pie(filteredData);
-
-                  const path = svg
-                    .selectAll('path')
-                    .data(data_ready, d => d.data.label);
-
-                  path.join(
-                    enter => enter.append('path')
-                      .attr('fill', d => color(d.data.label))
-                      .attr("stroke", "black")
-                      .style("stroke-width", "0.5px") // Ajustar espessura da borda
-                      .style("opacity", 0.7)
-                      .style("stroke-linejoin", "round")
-                      .each(function(d) { this._current = d; }), // store the initial angles
-                    update => update,
-                    exit => exit.remove()
-                  )
-                  .transition()
-                  .duration(750)
-                  .attrTween("d", arcTween);
-
-                  legend.selectAll("li")
-                    .data(data)
-                    .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive");
-                };
-
-                function arcTween(a) {
-                  const i = d3.interpolate(this._current, a);
-                  this._current = i(0);
-                  return (t) => arc(i(t));
-                }
-
-                const legend = d3.select("#legend")
-                  .append("ul")
-                  .style("list-style", "none");
-
-                legend.selectAll("li")
-                  .data(data)
-                  .enter()
-                  .append("li")
-                  .attr("class", d => selectedLabels.has(d.label) ? "legend-item active" : "legend-item inactive")
-                  .html(d => `<div style="width: 20px; height: 20px; background-color: ${color(d.label)}; margin-right: 10px;"></div>${d.label}`)
-                  .on("click", function(event, d) {
-                    if (selectedLabels.has(d.label)) {
-                      selectedLabels.delete(d.label);
-                    } else {
-                      selectedLabels.add(d.label);
-                    }
-                    updateChart();
-                  });
-
-                updateChart();
+                
               </script>
             </div>
           </div>
