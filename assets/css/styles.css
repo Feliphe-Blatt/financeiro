@@ -100,3 +100,25 @@ main {
 #transaction-history {
   margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+  #sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+
+  main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  #chart-container {
+    flex-direction: column;
+  }
+
+  #legend {
+    margin-top: 20px;
+    margin-left: 0;
+  }
+}
