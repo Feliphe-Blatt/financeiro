@@ -83,3 +83,5 @@ api/
 ## Documentação da API
 
 Para mais detalhes sobre os endpoints disponíveis e exemplos de uso, consulte a documentação completa [AQUI](https://github.com/Feliphe-Blatt/financeiro/blob/main/api_backend/docs/Documentação.MD).
+
+Documentação de requisitos completa [AQUI](https://github.com/Feliphe-Blatt/financeiro/blob/main/projetoControleFinanceiro.pdf).
