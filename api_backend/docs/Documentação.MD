@@ -59,8 +59,8 @@ spring.datasource.password=sua_senha
   },
   "categoria": {
     "tipo": "VARIAVEL",  // FIXA, VARIAVEL ou EXTRA
-    "nomeDespesa": "ALIMENTACAO",  // Nome predefinido ou null, mais detalhes na documentação completa
-    "nomeReceita": null  // nome predefinido ou null
+    "nomeDespesa": "ALIMENTACAO",  // Nome predefinido ou null, caso seja receita
+    "nomeReceita": null  // nome predefinido ou null, caso seja despesa
   },
   "quantidade": 1,
   "usuarioId": 1
