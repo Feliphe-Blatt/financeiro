@@ -1,4 +1,4 @@
-# Controle Financeiro API
+# API Controle Financeiro
 
 API para gerenciamento de finanças pessoais desenvolvida com Spring Boot e PostgreSQL.
 
