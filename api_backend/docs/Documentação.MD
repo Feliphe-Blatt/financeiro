@@ -1,12 +1,45 @@
-# Documentação Inicial do Projeto Controle Financeiro API
+# api-controle-financeiro
+ 
+# API de Controle Financeiro
 
-## Visão Geral
+Este projeto implementa uma API REST para gerenciamento financeiro pessoal utilizando Spring Boot.
 
-A Controle Financeiro API é uma aplicação Spring Boot que permite gerenciar movimentações financeiras, categorizando receitas e despesas de acordo com tipos específicos. O sistema possibilita o controle financeiro pessoal através de uma API REST.
+## Tecnologias Utilizadas
+
+- Java
+- Spring Boot
+- Spring Data JPA
+- Maven
+- Lombok
+- PostgreSQL
+- Insomnia
+- DBeaver
 
 ## Estrutura do Projeto
 
-### Principais Entidades
+O projeto segue uma arquitetura em camadas:
+
+- **Model**: Entidades JPA que representam as tabelas do banco de dados
+- **Repository**: Interfaces que estendem JpaRepository para operações de persistência
+- **Service**: Classes que implementam a lógica de negócio
+- **Controller**: Endpoints REST que recebem as requisições HTTP
+- **DTO**: Objetos de transferência de dados entre camadas
+- **Deserializer**: Classes para deserialização personalizada de dados JSON
+
+## Como Executar
+
+1. Clone o repositório
+2. Configure o banco de dados no arquivo `application.properties` localizado em `resources`
+3. Execute o comando: `mvn spring-boot:run`
+
+## Pré-requisitos
+
+- Java 17+
+- Maven 3.6+
+- PostgreSQL 12+
+- Insomnia (para testes de API)
+- DBeaver (para visualização do banco de dados)
+## Principais Entidades
 
 - **Movimentacao**: Registra transações financeiras
 - **Categoria**: Classifica as movimentações (FIXA, VARIAVEL ou EXTRA)
@@ -26,75 +59,124 @@ A Controle Financeiro API é uma aplicação Spring Boot que permite gerenciar m
 **Categorias de Receitas:**
 - SALARIO, BONUS, FREELANCER, VENDA, RENDIMENTO, OUTROS
 
-## Configuração do Ambiente
+## Funcionalidades
 
-### Requisitos
+### Movimentações Financeiras
 
-- Java 11+
-- PostgreSQL
-- Maven
+O sistema permite as seguintes operações para a entidade Movimentação:
 
-### Configurações de Banco de Dados
+- **Criar Movimentação**: Cadastro de novas movimentações financeiras (receitas ou despesas)
 
-A aplicação utiliza PostgreSQL configurado no arquivo `application.properties`:
+### Endpoints
 
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/controle_financeiro
-spring.datasource.username=postgres
-spring.datasource.password=sua_senha
-```
+#### Movimentações
 
-## API Endpoints
+- **POST** `/api/movimentacoes`: Cria uma nova movimentação financeira
+  - Body:
+  ```json
+  {
+    "valor": {
+      "valor": 1500.00,
+      "tipo": "RECEITA"
+    },
+    "categoria": {
+      "tipo": "FIXA",
+      "nomeReceita": "SALARIO"
+    },
+    "usuarioId": 1,
+    "quantidade": 1
+  }
+  ```
+  - Response: Status 201 (Created)
 
-### Criação de Movimentação
 
-**Endpoint**: `POST /api/movimentacoes`
+# Exemplos de Uso
 
-**Corpo da requisição**:
+## Testando a API com Insomnia
+
+### Criação de Movimentação - Despesa (POST)
+![Insomnia - Criação de Despesa](./testes-insomnia/criarDespesa.png)
+
+Nesta imagem, vemos a requisição POST para `/api/movimentacoes` com o seguinte corpo:
 ```json
 {
   "valor": {
     "valor": 150.00,
-    "tipo": "DESPESA"  // ou "RECEITA"
+    "tipo": "DESPESA"
   },
   "categoria": {
-    "tipo": "VARIAVEL",  // FIXA, VARIAVEL ou EXTRA
-    "nomeDespesa": "ALIMENTACAO",  // Nome predefinido ou null, mais detalhes na documentação completa
-    "nomeReceita": null  // nome predefinido ou null
+    "tipo": "VARIAVEL",
+    "nomeDespesa": "ALIMENTACAO"
   },
-  "quantidade": 1,
-  "usuarioId": 1
+  "usuarioId": 1,
+  "quantidade": 1
 }
 ```
 
-**Regras de negócio:**
-1. Despesas devem ser do tipo FIXA ou VARIAVEL e ter nomeDespesa preenchido
-2. Receitas podem ser FIXA, VARIAVEL ou EXTRA e devem ter nomeReceita preenchido
+O servidor retorna o status HTTP 201 (Created), confirmando o sucesso da operação.
 
-## Como Testar a API
+### Criação de Movimentação - Receita (POST)
+![Insomnia - Criação de Receita](./testes-insomnia/criarReceita.png)
 
-### Usando o Insomnia
+Nesta imagem, vemos a requisição POST para `/api/movimentacoes` com o seguinte corpo:
+```json
+{
+  "valor": {
+    "valor": 2500.00,
+    "tipo": "RECEITA"
+  },
+  "categoria": {
+    "tipo": "FIXA",
+    "nomeReceita": "SALARIO"
+  },
+  "usuarioId": 1,
+  "quantidade": 1
+}
+```
 
-1. Importe a coleção de endpoints para o Insomnia
-2. Configure o ambiente para apontar para `http://localhost:8080`
-3. Execute as requisições disponíveis
+## Visualização no Banco de Dados (DBeaver)
 
-### Usando o DBeaver
+### Tabela de Movimentações
+![DBeaver - Tabela de Movimentações](./testes-dbeaver/tabelaMovimentacoes.png)
 
-1. Conecte-se ao PostgreSQL usando as credenciais do `application.properties`
-2. Visualize as tabelas:
-   - movimentacao
-   - categoria
-   - valor
-   - usuario
+Nesta captura, podemos ver a tabela `movimentacao` no banco de dados PostgreSQL contendo os registros inseridos através da API.
 
-## Configuração do Banco de Dados
+### Tabela de Categorias
+![DBeaver - Tabela de Categorias](./testes-dbeaver/tabelaCategoria.png)
 
-A aplicação utiliza Hibernate com estratégia de atualização automática (`ddl-auto=update`), que cria/atualiza as tabelas automaticamente no startup.
+Visualização da tabela `categoria` com os diferentes tipos de categorias para despesas e receitas.
 
-## Desenvolvimento e Contribuição
+### Tabela de Valores
+![DBeaver - Tabela de Valores](./testes-dbeaver/tabelaValores.png)
 
-1. Clone o repositório
-2. Importe como projeto Maven na sua IDE
-3. Execute a aplicação localmente
-4. Faça requisições para testar a API
+A tabela `valor` armazena os valores monetários e identifica se são receitas ou despesas.
+
+### Consulta SQL
+
+Exemplo de consultas SQL executadas no DBeaver:
+
+```sql
+-- Consultar todas as movimentações
+SELECT * FROM movimentacao;
+
+-- Consultar total de despesas
+SELECT SUM(v.valor) FROM movimentacao m
+JOIN valor v ON m.valor_id = v.id
+WHERE v.receita = false;
+
+-- Consultar total de receitas
+SELECT SUM(v.valor) FROM movimentacao m
+JOIN valor v ON m.valor_id = v.id
+WHERE v.receita = true;
+
+-- Consultar movimentações por categoria
+SELECT c.tipo, COUNT(*) FROM movimentacao m
+JOIN categoria c ON m.categoria_id = c.id
+GROUP BY c.tipo;
+```
+
+## Observações
+
+- As capturas de tela demonstram o fluxo completo desde a requisição HTTP até o armazenamento no banco de dados
+- As operações financeiras são corretamente categorizadas como receitas ou despesas
+- As movimentações são associadas a um usuário específico do sistema
