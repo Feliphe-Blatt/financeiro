@@ -19,6 +19,7 @@ public class MovimentacaoDTO {
     @Data
     @JsonDeserialize(using = ValorDTODeserializer.class)
     public static class ValorDTO {
+        
         private BigDecimal valor;
         private String tipo; // RECEITA ou DESPESA
         
@@ -33,9 +34,8 @@ public class MovimentacaoDTO {
         
         // Construtor com todos os campos
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-        public ValorDTO(
-            @JsonProperty("valor") BigDecimal valor,
-            @JsonProperty(value = "tipo", required = false) String tipo) {
+        public ValorDTO(@JsonProperty("valor") BigDecimal valor, @JsonProperty(value = "tipo", required = false) String tipo) {
+            
             this.valor = valor;
             this.tipo = tipo != null ? tipo : "DESPESA";
         }

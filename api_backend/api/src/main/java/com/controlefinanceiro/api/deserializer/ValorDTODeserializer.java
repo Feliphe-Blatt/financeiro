@@ -13,6 +13,7 @@ public class ValorDTODeserializer extends JsonDeserializer<ValorDTO> {
   
   @Override
   public ValorDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    
     JsonNode node = jp.getCodec().readTree(jp);
     
     // Se o node é um valor numérico
