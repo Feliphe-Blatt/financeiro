@@ -1,4 +1,4 @@
-# Controle Financeiro API
+# API Controle Financeiro
 
 API para gerenciamento de finanças pessoais desenvolvida com Spring Boot e PostgreSQL.
 
@@ -30,7 +30,7 @@ API para gerenciamento de finanças pessoais desenvolvida com Spring Boot e Post
 
 1. Clone o repositório
    ```bash
-   git clone [URL_DO_REPOSITORIO]
+   git clone https://github.com/Feliphe-Blatt/financeiro.git
    cd api
    ```
 
@@ -83,3 +83,5 @@ api/
 ## Documentação da API
 
 Para mais detalhes sobre os endpoints disponíveis e exemplos de uso, consulte a documentação completa [AQUI](https://github.com/Feliphe-Blatt/financeiro/blob/main/api_backend/docs/Documentação.MD).
+
+Documentação de requisitos completa [AQUI](https://github.com/Feliphe-Blatt/financeiro/blob/main/projetoControleFinanceiro.pdf).
