@@ -1,50 +1,89 @@
 package com.controlefinanceiro.api.dto;
 
 import com.controlefinanceiro.api.deserializer.ValorDTODeserializer;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.controlefinanceiro.api.model.Categoria.NomeCategoriaReceita;
+import com.controlefinanceiro.api.model.Categoria.NomeCategoriaDespesa;
+import com.controlefinanceiro.api.model.Categoria.TipoCategoria;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MovimentacaoDTO {
     
-    private ValorDTO valor;
+    private Long id;
+    private int quantidade;
     private CategoriaDTO categoria;
+    private ValorDTO valor;
     private Long usuarioId;
-    private int quantidade = 1;
+    private LocalDate data;
+    private String descricao;
     
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CategoriaDTO {
+        private Long id;
+        private TipoCategoria tipo;
+        private NomeCategoriaDespesa nomeDespesa;
+        private NomeCategoriaReceita nomeReceita;
+    }
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @JsonDeserialize(using = ValorDTODeserializer.class)
     public static class ValorDTO {
-        
         private BigDecimal valor;
-        private String tipo; // RECEITA ou DESPESA
+        private String tipo = "DESPESA"; // Padrão é despesa
         
-        // Construtor padrão para o Lombok
-        public ValorDTO() {}
-        
-        // Construtor para valor numérico direto (considerado DESPESA por padrão)
         public ValorDTO(BigDecimal valor) {
             this.valor = valor;
-            this.tipo = "DESPESA";
         }
         
-        // Construtor com todos os campos
-        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-        public ValorDTO(@JsonProperty("valor") BigDecimal valor, @JsonProperty(value = "tipo", required = false) String tipo) {
-            
-            this.valor = valor;
-            this.tipo = tipo != null ? tipo : "DESPESA";
+        public boolean isReceita() {
+            return "RECEITA".equalsIgnoreCase(tipo);
         }
     }
     
     @Data
-    public static class CategoriaDTO {
-        private String tipo; // FIXA, VARIAVEL, EXTRA
-        private String nomeDespesa; // LAZER, EDUCACAO, MORADIA, TRANSPORTE, ALIMENTACAO, SAUDE, PRESENTES, PET, INVESTIMENTOS, ASSINATURAS, OUTROS
-        private String nomeReceita; // SALARIO, BONUS, FREELANCER, VENDA, RENDIMENTO, OUTROS
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovimentacaoRequestDTO {
+        private int quantidade = 1; // Default é 1
+        private CategoriaDTO categoria;
+        private ValorDTO valor;
+        private Long usuarioId;
+        private LocalDate data = LocalDate.now(); // Default é data atual
+        private String descricao;
+    }
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovimentacaoResponseDTO {
+        private Long id;
+        private int quantidade;
+        private CategoriaDTO categoria;
+        private ValorDTO valor;
+        private Long usuarioId;
+        private LocalDate data;
+        private String descricao;
+    }
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovimentacaoResumoDTO {
+        private BigDecimal totalReceitas = BigDecimal.ZERO;
+        private BigDecimal totalDespesas = BigDecimal.ZERO;
+        private BigDecimal saldo = BigDecimal.ZERO;
     }
 }
