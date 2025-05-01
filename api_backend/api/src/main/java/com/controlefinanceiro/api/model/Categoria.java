@@ -1,5 +1,8 @@
 package com.controlefinanceiro.api.model;
 
+import com.controlefinanceiro.api.enums.NomeCategoriaDespesaEnum;
+import com.controlefinanceiro.api.enums.NomeCategoriaReceitaEnum;
+import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,40 +21,12 @@ public class Categoria {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private TipoCategoria tipo;
-
-    public enum TipoCategoria {
-        FIXA,
-        VARIAVEL,
-        EXTRA
-    }
+    private TipoCategoriaEnum tipo;
 
     @Enumerated(EnumType.STRING)
-    private NomeCategoriaDespesa nomeDespesa;
+    private NomeCategoriaDespesaEnum nomeDespesa;
 
-    public enum NomeCategoriaDespesa {
-        LAZER,
-        EDUCACAO,
-        MORADIA,
-        TRANSPORTE,
-        ALIMENTACAO,
-        SAUDE,
-        PRESENTES,
-        PET,
-        INVESTIMENTOS,
-        ASSINATURAS,
-        OUTROS
-    }
     @Enumerated(EnumType.STRING)
-    private NomeCategoriaReceita nomeReceita;
-
-    public enum NomeCategoriaReceita {
-        SALARIO,
-        BONUS,
-        FREELANCER,
-        VENDA,
-        RENDIMENTO,
-        OUTROS
-    }
+    private NomeCategoriaReceitaEnum nomeReceita;
 
 }

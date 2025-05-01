@@ -21,9 +21,11 @@ public class Movimentacao {
     private int quantidade;
 
     @ManyToOne
+    @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
     @OneToOne
+    @JoinColumn(name = "valor_id")
     private Valor valor;
 
     @ManyToOne

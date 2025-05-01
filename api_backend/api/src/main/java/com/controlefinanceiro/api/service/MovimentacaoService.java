@@ -1,6 +1,9 @@
 package com.controlefinanceiro.api.service;
 
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
+import com.controlefinanceiro.api.enums.NomeCategoriaDespesaEnum;
+import com.controlefinanceiro.api.enums.NomeCategoriaReceitaEnum;
+import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import com.controlefinanceiro.api.model.Categoria;
 import com.controlefinanceiro.api.model.Movimentacao;
 import com.controlefinanceiro.api.model.Usuario;
@@ -39,14 +42,14 @@ public class MovimentacaoService {
         
         // Criar e configurar o objeto Categoria
         Categoria categoria = new Categoria();
-        categoria.setTipo(converteTipoCategoria(movimentacaoDTO.getCategoria().getTipo()));
+        categoria.setTipo(movimentacaoDTO.getCategoria().getTipo());
         
-        if (movimentacaoDTO.getCategoria().getNomeDespesa() != null && !movimentacaoDTO.getCategoria().getNomeDespesa().isEmpty()) {
-            categoria.setNomeDespesa(converteNomeDespesa(movimentacaoDTO.getCategoria().getNomeDespesa()));
+        if (movimentacaoDTO.getCategoria().getNomeDespesa() != null) {
+            categoria.setNomeDespesa(movimentacaoDTO.getCategoria().getNomeDespesa());
         }
         
-        if (movimentacaoDTO.getCategoria().getNomeReceita() != null && !movimentacaoDTO.getCategoria().getNomeReceita().isEmpty()) {
-            categoria.setNomeReceita(converteNomeReceita(movimentacaoDTO.getCategoria().getNomeReceita()));
+        if (movimentacaoDTO.getCategoria().getNomeReceita() != null) {
+            categoria.setNomeReceita(movimentacaoDTO.getCategoria().getNomeReceita());
         }
         
         // Validar a categoria, passando também o valor para verificar se é receita ou despesa
@@ -72,30 +75,6 @@ public class MovimentacaoService {
         System.out.println("Movimentação criada com sucesso!");
     }
     
-    private Categoria.TipoCategoria converteTipoCategoria(String tipo) {
-        try {
-            return Categoria.TipoCategoria.valueOf(tipo);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalArgumentException("Tipo de categoria inválido: " + tipo);
-        }
-    }
-    
-    private Categoria.NomeCategoriaDespesa converteNomeDespesa(String nome) {
-        try {
-            return Categoria.NomeCategoriaDespesa.valueOf(nome);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalArgumentException("Nome de despesa inválido: " + nome);
-        }
-    }
-    
-    private Categoria.NomeCategoriaReceita converteNomeReceita(String nome) {
-        try {
-            return Categoria.NomeCategoriaReceita.valueOf(nome);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new IllegalArgumentException("Nome de receita inválido: " + nome);
-        }
-    }
-    
     @Deprecated
     public void criarMovimentacao(Valor valor, Categoria categoria) {
         validarCategoria(categoria, valor.isReceita());
@@ -119,7 +98,7 @@ public class MovimentacaoService {
         
         // LÓGICA PARA DESPESAS
         if (!isReceita) {
-            if (categoria.getTipo() == Categoria.TipoCategoria.FIXA || categoria.getTipo() == Categoria.TipoCategoria.VARIAVEL) {
+            if (categoria.getTipo() == TipoCategoriaEnum.FIXA || categoria.getTipo() == TipoCategoriaEnum.VARIAVEL) {
                 if (categoria.getNomeDespesa() == null || categoria.getNomeReceita() != null) {
                     throw new IllegalArgumentException("Categoria de despesa deve ter nomeDespesa preenchido e nomeReceita nulo.");
                 }
@@ -129,11 +108,11 @@ public class MovimentacaoService {
         } 
         // LÓGICA PARA RECEITAS
         else {
-            if (categoria.getTipo() == Categoria.TipoCategoria.EXTRA) {
+            if (categoria.getTipo() == TipoCategoriaEnum.EXTRA) {
                 if (categoria.getNomeReceita() == null || categoria.getNomeDespesa() != null) {
                     throw new IllegalArgumentException("Categoria de receita EXTRA deve ter nomeReceita preenchido e nomeDespesa nulo.");
                 }
-            } else if (categoria.getTipo() == Categoria.TipoCategoria.FIXA || categoria.getTipo() == Categoria.TipoCategoria.VARIAVEL) {
+            } else if (categoria.getTipo() == TipoCategoriaEnum.FIXA || categoria.getTipo() == TipoCategoriaEnum.VARIAVEL) {
                 if (categoria.getNomeReceita() == null || categoria.getNomeDespesa() != null) {
                     throw new IllegalArgumentException("Categoria de receita deve ter nomeReceita preenchido e nomeDespesa nulo.");
                 }

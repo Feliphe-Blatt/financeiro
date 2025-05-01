@@ -1,9 +1,9 @@
 package com.controlefinanceiro.api.dto;
 
 import com.controlefinanceiro.api.deserializer.ValorDTODeserializer;
-import com.controlefinanceiro.api.model.Categoria.NomeCategoriaReceita;
-import com.controlefinanceiro.api.model.Categoria.NomeCategoriaDespesa;
-import com.controlefinanceiro.api.model.Categoria.TipoCategoria;
+import com.controlefinanceiro.api.enums.NomeCategoriaDespesaEnum;
+import com.controlefinanceiro.api.enums.NomeCategoriaReceitaEnum;
+import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AllArgsConstructor;
@@ -31,9 +31,9 @@ public class MovimentacaoDTO {
     @AllArgsConstructor
     public static class CategoriaDTO {
         private Long id;
-        private TipoCategoria tipo;
-        private NomeCategoriaDespesa nomeDespesa;
-        private NomeCategoriaReceita nomeReceita;
+        private TipoCategoriaEnum tipo;
+        private NomeCategoriaDespesaEnum nomeDespesa;
+        private NomeCategoriaReceitaEnum nomeReceita;
     }
     
     @Data
