@@ -37,9 +37,19 @@ public class MovimentacaoService {
                 (!isReceita && !"Despesa".equals(categoria.getNomeCategoria().getTipo()))) {
             throw new IllegalArgumentException("A categoria selecionada não corresponde ao tipo da movimentação. ID: " + movimentacaoDTO.getCategoria() + " / isReceita: " + movimentacaoDTO.isReceita());
         }
+
+        // Validar e definir o tipo da movimentação
+//        TipoCategoriaEnum tipo = movimentacaoDTO.getTipo();
+//        try {
+//            tipo = TipoCategoriaEnum.valueOf(movimentacaoDTO.getTipo().name());
+//        } catch (IllegalArgumentException | NullPointerException exceptionTipo) {
+//            throw new IllegalArgumentException("O tipo da movimentação é inválido. Valores permitidos: FIXA, VARIAVEL ou EXTRA.");
+//        }
+//        mov.setTipo(tipo);
         
         // Criar a movimentação
         mov.setValor(movimentacaoDTO.getValor());
+        mov.setTipo(movimentacaoDTO.getTipo());
         mov.setCategoria(categoria);
         mov.setData(movimentacaoDTO.getData());
         mov.setDescricao(movimentacaoDTO.getDescricao());

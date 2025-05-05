@@ -2,6 +2,7 @@ package com.controlefinanceiro.api.controller;
 
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
 import com.controlefinanceiro.api.service.MovimentacaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class MovimentacaoController {
     private MovimentacaoService movimentacaoService;
 
     @PostMapping
-    public ResponseEntity<String> criarMovimentacao(@RequestBody MovimentacaoDTO movimentacaoDTO) {
+    public ResponseEntity<String> criarMovimentacao(@Valid @RequestBody MovimentacaoDTO movimentacaoDTO) {
         try {
             movimentacaoService.criarMovimentacao(movimentacaoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("Movimentação criada com sucesso!");

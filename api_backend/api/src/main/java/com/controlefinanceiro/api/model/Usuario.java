@@ -1,5 +1,6 @@
 package com.controlefinanceiro.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class Usuario {
 
     private String nome;
     private String email;
+    @JsonIgnore
     private String senha;
 }
