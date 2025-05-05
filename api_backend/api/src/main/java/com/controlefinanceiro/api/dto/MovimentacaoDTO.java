@@ -1,9 +1,8 @@
 package com.controlefinanceiro.api.dto;
 
-import com.controlefinanceiro.api.deserializer.ValorDTODeserializer;
-import com.controlefinanceiro.api.enums.NomeCategoriaDespesaEnum;
-import com.controlefinanceiro.api.enums.NomeCategoriaReceitaEnum;
+import com.controlefinanceiro.api.enums.NomeCategoriaEnum;
 import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import lombok.AllArgsConstructor;
@@ -19,11 +18,13 @@ import java.time.LocalDate;
 public class MovimentacaoDTO {
     
     private Long id;
-    private int quantidade;
-    private CategoriaDTO categoria;
-    private ValorDTO valor;
+    @JsonProperty("isReceita")
+    private boolean isReceita;
+    private BigDecimal valor;
+    private Long categoria;
     private Long usuarioId;
     private LocalDate data;
+    private TipoCategoriaEnum tipo;
     private String descricao;
     
     @Data
@@ -31,35 +32,14 @@ public class MovimentacaoDTO {
     @AllArgsConstructor
     public static class CategoriaDTO {
         private Long id;
-        private TipoCategoriaEnum tipo;
-        private NomeCategoriaDespesaEnum nomeDespesa;
-        private NomeCategoriaReceitaEnum nomeReceita;
-    }
-    
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @JsonDeserialize(using = ValorDTODeserializer.class)
-    public static class ValorDTO {
-        private BigDecimal valor;
-        private String tipo = "DESPESA"; // Padrão é despesa
-        
-        public ValorDTO(BigDecimal valor) {
-            this.valor = valor;
-        }
-        
-        public boolean isReceita() {
-            return "RECEITA".equalsIgnoreCase(tipo);
-        }
+        private NomeCategoriaEnum nomeCategoria;
     }
     
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MovimentacaoRequestDTO {
-        private int quantidade = 1; // Default é 1
-        private CategoriaDTO categoria;
-        private ValorDTO valor;
+        private Long categoria;
         private Long usuarioId;
         private LocalDate data = LocalDate.now(); // Default é data atual
         private String descricao;
@@ -70,11 +50,12 @@ public class MovimentacaoDTO {
     @AllArgsConstructor
     public static class MovimentacaoResponseDTO {
         private Long id;
-        private int quantidade;
-        private CategoriaDTO categoria;
-        private ValorDTO valor;
+        private boolean isReceita;
+        private BigDecimal valor;
+        private Long categoria;
         private Long usuarioId;
         private LocalDate data;
+        private TipoCategoriaEnum tipo;
         private String descricao;
     }
     

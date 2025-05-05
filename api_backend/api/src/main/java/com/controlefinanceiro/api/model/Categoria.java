@@ -1,8 +1,6 @@
 package com.controlefinanceiro.api.model;
 
-import com.controlefinanceiro.api.enums.NomeCategoriaDespesaEnum;
-import com.controlefinanceiro.api.enums.NomeCategoriaReceitaEnum;
-import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
+import com.controlefinanceiro.api.enums.NomeCategoriaEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,12 +19,5 @@ public class Categoria {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private TipoCategoriaEnum tipo;
-
-    @Enumerated(EnumType.STRING)
-    private NomeCategoriaDespesaEnum nomeDespesa;
-
-    @Enumerated(EnumType.STRING)
-    private NomeCategoriaReceitaEnum nomeReceita;
-
+    private NomeCategoriaEnum nomeCategoria;
 }

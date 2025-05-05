@@ -1,10 +1,12 @@
 package com.controlefinanceiro.api.model;
 
+import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -17,22 +19,20 @@ public class Movimentacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private int quantidade;
+    private boolean isReceita;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @OneToOne
-    @JoinColumn(name = "valor_id")
-    private Valor valor;
-
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    
+
+    @Enumerated(EnumType.STRING)
+    private TipoCategoriaEnum tipo;
+    private BigDecimal valor;
+
     private LocalDate data = LocalDate.now();
-    
     private String descricao;
 }
