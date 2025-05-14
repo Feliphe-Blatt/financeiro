@@ -4,6 +4,7 @@ import com.controlefinanceiro.api.dto.UsuarioDTO;
 import com.controlefinanceiro.api.model.Usuario;
 import com.controlefinanceiro.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private final UsuarioRepository usuarioRepository;
     
@@ -57,22 +61,21 @@ public class UsuarioService {
      * @return DTO do usuário criado
      */
     @Transactional
-    public UsuarioDTO criar(UsuarioDTO usuarioDTO) {
-        // Converter DTO para entidade
+    public void criar(UsuarioDTO.UsuarioRequestDTO usuarioDTO) {
+        validarSeUsuarioJaExiste(usuarioDTO.email());
         Usuario usuario = new Usuario();
-        usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setSenha(usuarioDTO.getSenha());
-        
-        // Salvar no banco de dados
-        usuario = usuarioRepository.save(usuario);
-        
-        // Converter entidade para DTO de resposta
-        return new UsuarioDTO(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail(),
-                null); // Não retornamos a senha
+
+        usuario.setNome(usuarioDTO.nome());
+        usuario.setEmail(usuarioDTO.email());
+        usuario.setSenha(passwordEncoder.encode(usuarioDTO.senha()));
+
+        usuarioRepository.save(usuario);
+    }
+
+    public void validarSeUsuarioJaExiste(String email) {
+        if (usuarioRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com este email.");
+        }
     }
     
     /**

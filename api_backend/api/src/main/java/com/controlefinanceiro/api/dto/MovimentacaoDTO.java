@@ -22,25 +22,25 @@ public class MovimentacaoDTO {
     private Long id;
     @JsonProperty("isReceita")
     @NotNull
-    private boolean isReceita; // Indica se é receita ou despesa
+    private boolean isReceita;
 
     @NotNull(message = "O valor é obrigatório.")
     @Positive(message = "O valor deve ser positivo.")
-    private BigDecimal valor; // Valor da movimentação
+    private BigDecimal valor;
 
     @NotNull
-    private Long categoria; // ID da categoria associada à movimentação
+    private Long categoria;
 
     @NotNull
-    private Long usuarioId; // ID do usuário associado à movimentação
+    private Long usuarioId;
 
-    private LocalDate data; // Data da movimentação (default é a data atual)
+    private LocalDate data;
 
     @NotNull(message = "O campo 'tipo' é obrigatório.")
-    private TipoCategoriaEnum tipo; // Tipo da movimentação (Fixa, Variável ou Extra)
+    private TipoCategoriaEnum tipo;
 
     private String descricao;
-    
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -48,14 +48,26 @@ public class MovimentacaoDTO {
         private Long id;
         private NomeCategoriaEnum nomeCategoria;
     }
-    
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MovimentacaoRequestDTO {
+
+        @JsonProperty("isReceita")
+        @NotNull
+        private boolean isReceita;
+
+        @NotNull(message = "O valor é obrigatório.")
+        @Positive(message = "O valor deve ser positivo.")
+        private BigDecimal valor;
+
         private Long categoria;
         private Long usuarioId;
-        private LocalDate data = LocalDate.now(); // Default é data atual
+        private LocalDate data = LocalDate.now();
+
+        @NotNull(message = "O campo 'tipo' é obrigatório.")
+        private TipoCategoriaEnum tipo = TipoCategoriaEnum.VARIAVEL; // Valor padrão
         private String descricao;
     }
     
@@ -63,7 +75,6 @@ public class MovimentacaoDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MovimentacaoResponseDTO {
-        private Long id;
         private boolean isReceita;
         private BigDecimal valor;
         private Long categoria;

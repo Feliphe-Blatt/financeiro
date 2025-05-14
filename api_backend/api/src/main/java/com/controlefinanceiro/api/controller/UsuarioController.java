@@ -15,7 +15,7 @@ import java.util.List;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    
+
     @Autowired
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
@@ -38,8 +38,8 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UsuarioDTO criar(@RequestBody UsuarioDTO usuarioDTO) {
-        return usuarioService.criar(usuarioDTO);
+    public void criar(@RequestBody UsuarioDTO.UsuarioRequestDTO usuarioDTO) {
+        usuarioService.criar(usuarioDTO);
     }
 
     @PutMapping("/{id}")

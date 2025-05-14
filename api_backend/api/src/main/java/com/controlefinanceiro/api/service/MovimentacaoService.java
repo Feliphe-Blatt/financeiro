@@ -24,36 +24,23 @@ public class MovimentacaoService {
     
     
     @Transactional
-    public void criarMovimentacao(MovimentacaoDTO movimentacaoDTO) {
+    public void criarMovimentacao(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
         Movimentacao mov = new Movimentacao();
         mov.setReceita(movimentacaoDTO.isReceita());
 
+
         // Validar categoria inserida
-        Categoria categoria = categoriaRepository.findById(movimentacaoDTO.getCategoria()).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com ID: " + movimentacaoDTO.getCategoria()));
+        Categoria categoria = validarCategoria(movimentacaoDTO);
 
         // Validar se o tipo da categoria corresponde ao tipo da movimentação
-        boolean isReceita = movimentacaoDTO.isReceita();
-        if ((isReceita && !"Receita".equals(categoria.getNomeCategoria().getTipo())) ||
-                (!isReceita && !"Despesa".equals(categoria.getNomeCategoria().getTipo()))) {
-            throw new IllegalArgumentException("A categoria selecionada não corresponde ao tipo da movimentação. ID: " + movimentacaoDTO.getCategoria() + " / isReceita: " + movimentacaoDTO.isReceita());
-        }
+        validarMovimentacaoIsReceita(movimentacaoDTO, categoria);
 
-        // Validar e definir o tipo da movimentação
-//        TipoCategoriaEnum tipo = movimentacaoDTO.getTipo();
-//        try {
-//            tipo = TipoCategoriaEnum.valueOf(movimentacaoDTO.getTipo().name());
-//        } catch (IllegalArgumentException | NullPointerException exceptionTipo) {
-//            throw new IllegalArgumentException("O tipo da movimentação é inválido. Valores permitidos: FIXA, VARIAVEL ou EXTRA.");
-//        }
-//        mov.setTipo(tipo);
-        
         // Criar a movimentação
         mov.setValor(movimentacaoDTO.getValor());
         mov.setTipo(movimentacaoDTO.getTipo());
         mov.setCategoria(categoria);
         mov.setData(movimentacaoDTO.getData());
         mov.setDescricao(movimentacaoDTO.getDescricao());
-        mov.setTipo(movimentacaoDTO.getTipo());
         
         // Associar ao usuário, se o ID do usuário estiver presente
         if (movimentacaoDTO.getUsuarioId() != null) {
@@ -65,5 +52,17 @@ public class MovimentacaoService {
         movimentacaoRepository.save(mov);
         System.out.println("Movimentação criada com sucesso!");
 
+    }
+    private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {
+        boolean isReceita = movimentacaoDTO.isReceita();
+        if ((isReceita && !"Receita".equals(categoria.getNomeCategoria().getTipo())) ||
+                (!isReceita && !"Despesa".equals(categoria.getNomeCategoria().getTipo()))) {
+            throw new IllegalArgumentException("A categoria selecionada não corresponde ao tipo da movimentação. ID: "
+                    + movimentacaoDTO.getCategoria() + " / isReceita: " + movimentacaoDTO.isReceita());
+        }
+    }
+    private Categoria validarCategoria(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
+        return categoriaRepository.findById(movimentacaoDTO.getCategoria())
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com ID: " + movimentacaoDTO.getCategoria()));
     }
 }

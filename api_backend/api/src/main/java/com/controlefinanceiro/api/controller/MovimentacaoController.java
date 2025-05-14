@@ -17,7 +17,7 @@ public class MovimentacaoController {
     private MovimentacaoService movimentacaoService;
 
     @PostMapping
-    public ResponseEntity<String> criarMovimentacao(@Valid @RequestBody MovimentacaoDTO movimentacaoDTO) {
+    public ResponseEntity<String> criarMovimentacao(@Valid @RequestBody MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
         try {
             movimentacaoService.criarMovimentacao(movimentacaoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("Movimentação criada com sucesso!");
