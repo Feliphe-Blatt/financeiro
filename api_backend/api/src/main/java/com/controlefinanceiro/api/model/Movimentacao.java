@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -34,5 +36,8 @@ public class Movimentacao {
     private BigDecimal valor;
 
     private LocalDate data = LocalDate.now();
+
+    private LocalTime horarioMovimentacao = LocalTime.now();
+
     private String descricao;
 }
