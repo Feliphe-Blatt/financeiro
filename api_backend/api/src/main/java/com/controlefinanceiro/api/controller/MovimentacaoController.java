@@ -1,18 +1,20 @@
 package com.controlefinanceiro.api.controller;
 
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
+import com.controlefinanceiro.api.model.Usuario;
+import com.controlefinanceiro.api.repository.UsuarioRepository;
 import com.controlefinanceiro.api.service.MovimentacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/movimentacoes")
 @CrossOrigin(origins = "*")
 public class MovimentacaoController {
-
     @Autowired
     private MovimentacaoService movimentacaoService;
 

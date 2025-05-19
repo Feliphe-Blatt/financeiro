@@ -9,6 +9,7 @@ import com.controlefinanceiro.api.repository.CategoriaRepository;
 import com.controlefinanceiro.api.repository.MovimentacaoRepository;
 import com.controlefinanceiro.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,13 +42,9 @@ public class MovimentacaoService {
         mov.setCategoria(categoria);
         mov.setData(movimentacaoDTO.getData());
         mov.setDescricao(movimentacaoDTO.getDescricao());
-        
-        // Associar ao usuário, se o ID do usuário estiver presente
-        if (movimentacaoDTO.getUsuarioId() != null) {
-            Usuario usuario = usuarioRepository.findById(movimentacaoDTO.getUsuarioId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com ID: " + movimentacaoDTO.getUsuarioId()));
-            mov.setUsuario(usuario);
-        }
+
+        Usuario usuario = obterUsuarioLogado();
+        mov.setUsuario(usuario);
         
         movimentacaoRepository.save(mov);
         System.out.println("Movimentação criada com sucesso!");
@@ -64,5 +61,15 @@ public class MovimentacaoService {
     private Categoria validarCategoria(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
         return categoriaRepository.findById(movimentacaoDTO.getCategoria())
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com ID: " + movimentacaoDTO.getCategoria()));
+    }
+
+    private Usuario obterUsuarioLogado() {
+        // Recupera o ID do usuário logado a partir do SecurityContextHolder
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario usuario = (Usuario) principal;
+
+        // Busca o usuário no banco de dados pelo ID
+        return usuarioRepository.findById(usuario.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o ID: " + usuario.getId()));
     }
 }
