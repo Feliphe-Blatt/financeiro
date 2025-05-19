@@ -31,4 +31,14 @@ public class MovimentacaoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao criar movimentação: " + e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> getMovimentacoesUsuarioLogado() {
+        try {
+            return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao obter movimentações: " + e.getMessage());
+        }
+    }
+
 }

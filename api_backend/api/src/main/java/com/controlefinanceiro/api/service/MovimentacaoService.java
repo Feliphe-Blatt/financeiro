@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class MovimentacaoService {
     
@@ -50,6 +52,14 @@ public class MovimentacaoService {
         System.out.println("Movimentação criada com sucesso!");
 
     }
+
+    @Transactional(readOnly = true)
+    public List<Movimentacao> getMovimentacoesUsuarioLogado() {
+        Usuario usuario = obterUsuarioLogado();
+
+        return movimentacaoRepository.findByUsuarioId(usuario.getId());
+    }
+
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {
         boolean isReceita = movimentacaoDTO.isReceita();
         if ((isReceita && !"Receita".equals(categoria.getNomeCategoria().getTipo())) ||
