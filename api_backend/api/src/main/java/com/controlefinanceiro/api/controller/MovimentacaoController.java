@@ -1,14 +1,11 @@
 package com.controlefinanceiro.api.controller;
 
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
-import com.controlefinanceiro.api.model.Usuario;
-import com.controlefinanceiro.api.repository.UsuarioRepository;
 import com.controlefinanceiro.api.service.MovimentacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +29,17 @@ public class MovimentacaoController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> getMovimentacoesUsuarioLogado() {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMovimentacoesUsuarioPorId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao obter movimentações: " + e.getMessage());
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getMovimentacoesUsuarioLogado(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
         } catch (Exception e) {

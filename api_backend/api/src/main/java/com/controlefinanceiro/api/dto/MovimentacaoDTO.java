@@ -78,7 +78,6 @@ public class MovimentacaoDTO {
         private boolean isReceita;
         private BigDecimal valor;
         private Long categoria;
-        private Long usuarioId;
         private LocalDate data;
         private TipoCategoriaEnum tipo;
         private String descricao;

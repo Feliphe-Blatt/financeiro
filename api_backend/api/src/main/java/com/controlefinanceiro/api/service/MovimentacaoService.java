@@ -54,10 +54,22 @@ public class MovimentacaoService {
     }
 
     @Transactional(readOnly = true)
-    public List<Movimentacao> getMovimentacoesUsuarioLogado() {
+    public List<MovimentacaoDTO.MovimentacaoResponseDTO> getMovimentacoesUsuarioLogado() {
         Usuario usuario = obterUsuarioLogado();
 
-        return movimentacaoRepository.findByUsuarioId(usuario.getId());
+        return movimentacaoRepository.findByUsuarioId(usuario.getId())
+                .stream()
+                .map(mov -> {
+                    MovimentacaoDTO.MovimentacaoResponseDTO dto = new MovimentacaoDTO.MovimentacaoResponseDTO();
+                    dto.setTipo(mov.getTipo());
+                    dto.setCategoria(mov.getCategoria() != null ? mov.getCategoria().getId() : null);
+                    dto.setValor(mov.getValor());
+                    dto.setData(mov.getData());
+                    dto.setDescricao(mov.getDescricao());
+                    dto.setReceita(mov.isReceita());
+                    return dto;
+                })
+                .toList();
     }
 
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {
@@ -68,6 +80,7 @@ public class MovimentacaoService {
                     + movimentacaoDTO.getCategoria() + " / isReceita: " + movimentacaoDTO.isReceita());
         }
     }
+
     private Categoria validarCategoria(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
         return categoriaRepository.findById(movimentacaoDTO.getCategoria())
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com ID: " + movimentacaoDTO.getCategoria()));
