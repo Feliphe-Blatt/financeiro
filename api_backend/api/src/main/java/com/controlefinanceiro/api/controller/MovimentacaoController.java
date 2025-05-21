@@ -29,8 +29,8 @@ public class MovimentacaoController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getMovimentacoesUsuarioPorId(@PathVariable Long id) {
+    @GetMapping("/usuario-movimentacoes/{id}")
+    public ResponseEntity<?> getMovimentacoesUsuarioLogado(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
         } catch (Exception e) {
@@ -38,10 +38,10 @@ public class MovimentacaoController {
         }
     }
 
-    @GetMapping()
-    public ResponseEntity<?> getMovimentacoesUsuarioLogado(@PathVariable Long id) {
+    @GetMapping("/homepage/{id}")
+    public ResponseEntity<?> getMovimentacoesUsuarioTelaInicial(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
+            return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioTelaInicial());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao obter movimentações: " + e.getMessage());
         }

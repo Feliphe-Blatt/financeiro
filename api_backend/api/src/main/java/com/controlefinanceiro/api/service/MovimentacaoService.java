@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -59,14 +61,21 @@ public class MovimentacaoService {
 
         return movimentacaoRepository.findByUsuarioId(usuario.getId())
                 .stream()
-                .map(mov -> {
-                    MovimentacaoDTO.MovimentacaoResponseDTO dto = new MovimentacaoDTO.MovimentacaoResponseDTO();
-                    dto.setTipo(mov.getTipo());
-                    dto.setCategoria(mov.getCategoria() != null ? mov.getCategoria().getId() : null);
-                    dto.setValor(mov.getValor());
-                    dto.setData(mov.getData());
-                    dto.setDescricao(mov.getDescricao());
-                    dto.setReceita(mov.isReceita());
+                .map(movimentacao -> {
+                    MovimentacaoDTO.MovimentacaoResponseDTO dto = mapearParaDTO(movimentacao);
+                    return dto;
+                })
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial> getMovimentacoesUsuarioTelaInicial() {
+        Usuario usuario = obterUsuarioLogado();
+
+        return movimentacaoRepository.findByUsuarioId(usuario.getId())
+                .stream()
+                .map(movimentacao -> {
+                    MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial dto = mapearParaDTOTelaInicial(movimentacao);
                     return dto;
                 })
                 .toList();
@@ -82,8 +91,11 @@ public class MovimentacaoService {
     }
 
     private Categoria validarCategoria(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO) {
-        return categoriaRepository.findById(movimentacaoDTO.getCategoria())
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com ID: " + movimentacaoDTO.getCategoria()));
+        String nomeCategoria = movimentacaoDTO.getCategoria();
+        return categoriaRepository.findAll().stream()
+                .filter(categoria -> categoria.getNomeCategoria().name().equalsIgnoreCase(nomeCategoria))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o nome: " + nomeCategoria));
     }
 
     private Usuario obterUsuarioLogado() {
@@ -94,5 +106,39 @@ public class MovimentacaoService {
         // Busca o usuário no banco de dados pelo ID
         return usuarioRepository.findById(usuario.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado com o ID: " + usuario.getId()));
+    }
+
+    private MovimentacaoDTO.MovimentacaoResponseDTO mapearParaDTO(Movimentacao movimentacao) {
+        MovimentacaoDTO.MovimentacaoResponseDTO dto = new MovimentacaoDTO.MovimentacaoResponseDTO();
+        dto.setTipoDaMovimentacao(movimentacao.getTipo());
+        dto.setCategoria(movimentacao.getCategoria().getNomeCategoria().toString());
+        BigDecimal valor = movimentacao.isReceita()
+                ? movimentacao.getValor()
+                : movimentacao.getValor().negate();
+        dto.setValor(valor);
+        dto.setData(movimentacao.getData());
+        dto.setDescricao(movimentacao.getDescricao());
+        dto.setHoraMovimentacao(
+                movimentacao.getHorarioMovimentacao() != null
+                        ? movimentacao.getHorarioMovimentacao().truncatedTo(ChronoUnit.MINUTES)
+                        : null
+        );
+        return dto;
+    }
+
+    private MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial mapearParaDTOTelaInicial(Movimentacao movimentacao) {
+        MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial dto = new MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial();
+        dto.setCategoria(movimentacao.getCategoria().getNomeCategoria().toString());
+        BigDecimal valor = movimentacao.isReceita()
+                ? movimentacao.getValor()
+                : movimentacao.getValor().negate();
+        dto.setValor(valor);
+        dto.setData(movimentacao.getData());
+        dto.setHoraMovimentacao(
+                movimentacao.getHorarioMovimentacao() != null
+                        ? movimentacao.getHorarioMovimentacao().truncatedTo(ChronoUnit.MINUTES)
+                        : null
+        );
+        return dto;
     }
 }

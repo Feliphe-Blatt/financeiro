@@ -24,4 +24,9 @@ public class UsuarioDTO {
             String senha
     ) {
     }
+    public record UsuarioResponseDTO(
+            String nome,
+            String email
+    ) {
+    }
 }

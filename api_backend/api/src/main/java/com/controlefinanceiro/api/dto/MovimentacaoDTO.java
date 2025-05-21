@@ -2,6 +2,7 @@ package com.controlefinanceiro.api.dto;
 
 import com.controlefinanceiro.api.enums.NomeCategoriaEnum;
 import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
+import com.controlefinanceiro.api.model.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -13,13 +14,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovimentacaoDTO {
-    
-    private Long id;
     @JsonProperty("isReceita")
     @NotNull
     private boolean isReceita;
@@ -29,7 +29,7 @@ public class MovimentacaoDTO {
     private BigDecimal valor;
 
     @NotNull
-    private Long categoria;
+    private Categoria categoria;
 
     @NotNull
     private Long usuarioId;
@@ -44,14 +44,6 @@ public class MovimentacaoDTO {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CategoriaDTO {
-        private Long id;
-        private NomeCategoriaEnum nomeCategoria;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class MovimentacaoRequestDTO {
 
         @JsonProperty("isReceita")
@@ -62,9 +54,9 @@ public class MovimentacaoDTO {
         @Positive(message = "O valor deve ser positivo.")
         private BigDecimal valor;
 
-        private Long categoria;
-        private Long usuarioId;
+        private String categoria;
         private LocalDate data = LocalDate.now();
+        private LocalTime horarioMovimentacao = LocalTime.now();
 
         @NotNull(message = "O campo 'tipo' é obrigatório.")
         private TipoCategoriaEnum tipo = TipoCategoriaEnum.VARIAVEL; // Valor padrão
@@ -75,12 +67,22 @@ public class MovimentacaoDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MovimentacaoResponseDTO {
-        private boolean isReceita;
         private BigDecimal valor;
-        private Long categoria;
+        private String categoria;
         private LocalDate data;
-        private TipoCategoriaEnum tipo;
+        private TipoCategoriaEnum tipoDaMovimentacao;
         private String descricao;
+        private LocalTime horaMovimentacao;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MovimentacaoResponseDTOTelaInicial {
+        private BigDecimal valor;
+        private String categoria;
+        private LocalDate data;
+        private LocalTime horaMovimentacao;
     }
     
     @Data
