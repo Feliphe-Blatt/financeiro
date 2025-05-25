@@ -3,13 +3,15 @@ package com.controlefinanceiro.api.controller;
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
 import com.controlefinanceiro.api.model.Movimentacao;
 import com.controlefinanceiro.api.service.MovimentacaoService;
-import com.controlefinanceiro.api.strategy.RelatorioPorCategoriaStrategy;
+import com.controlefinanceiro.api.strategy.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -33,8 +35,8 @@ public class MovimentacaoController {
         }
     }
 
-    @GetMapping("/usuario-movimentacoes/{id}")
-    public ResponseEntity<?> getMovimentacoesUsuarioLogado(@PathVariable Long id) {
+    @GetMapping("/usuario-movimentacoes")
+    public ResponseEntity<?> getMovimentacoesUsuarioLogado() {
         try {
             return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioLogado());
         } catch (Exception e) {
@@ -42,7 +44,7 @@ public class MovimentacaoController {
         }
     }
 
-    @GetMapping("/homepage")
+    @GetMapping("/usuario/movimentacoes-tela-inicial")
     public ResponseEntity<?> getMovimentacoesUsuarioTelaInicial() {
         try {
             return ResponseEntity.ok(movimentacaoService.getMovimentacoesUsuarioTelaInicial());
@@ -67,4 +69,35 @@ public class MovimentacaoController {
         return ResponseEntity.ok(dtos);
     }
 
+    @GetMapping("/relatorio/data-periodo")
+    public ResponseEntity<?> relatorioPorData(@RequestParam LocalDate dataInicio,
+                                              @RequestParam LocalDate dataFim)
+    {
+        RelatorioPorDataStrategy strategy = new RelatorioPorDataStrategy(dataInicio, dataFim);
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/relatorio/valor-margem")
+    public ResponseEntity<?> relatorioPorData(@RequestParam BigDecimal valorMinimo,
+                                              @RequestParam BigDecimal valorMaximo)
+    {
+        RelatorioPorValorStrategy strategy = new RelatorioPorValorStrategy(valorMinimo, valorMaximo);
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/relatorio/tipo")
+    public ResponseEntity<?> relatorioPorTipo(@RequestParam String tipo) {
+        RelatorioPorTipoStrategy strategy = new RelatorioPorTipoStrategy(tipo);
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/relatorio/receita-despesa")
+    public ResponseEntity<?> relatorioPorReceitaOuDespesa(@RequestParam boolean isReceita) {
+        RelatorioPorReceitaDespesaStrategy strategy = new RelatorioPorReceitaDespesaStrategy(isReceita);
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
+        return ResponseEntity.ok(dtos);
+    }
 }

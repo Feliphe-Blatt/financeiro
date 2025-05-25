@@ -2,6 +2,7 @@ package com.controlefinanceiro.api.dto;
 
 import com.controlefinanceiro.api.enums.NomeCategoriaEnum;
 import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
+import com.controlefinanceiro.api.json.TipoCategoriaEnumDeserializer;
 import com.controlefinanceiro.api.model.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -37,7 +38,8 @@ public class MovimentacaoDTO {
     private LocalDate data;
 
     @NotNull(message = "O campo 'tipo' é obrigatório.")
-    private TipoCategoriaEnum tipo;
+    @JsonDeserialize(using = TipoCategoriaEnumDeserializer.class)
+    private TipoCategoriaEnum tipo = TipoCategoriaEnum.VARIAVEL;
 
     private String descricao;
 
@@ -59,7 +61,9 @@ public class MovimentacaoDTO {
         private LocalTime horarioMovimentacao = LocalTime.now();
 
         @NotNull(message = "O campo 'tipo' é obrigatório.")
-        private TipoCategoriaEnum tipo = TipoCategoriaEnum.VARIAVEL; // Valor padrão
+        @JsonDeserialize(using = TipoCategoriaEnumDeserializer.class)
+        private TipoCategoriaEnum tipo = TipoCategoriaEnum.VARIAVEL;
+
         private String descricao;
     }
     

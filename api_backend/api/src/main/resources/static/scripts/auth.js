@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('token');
             window.location.href = 'login.html';
         }
+        if (response.status === 403) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+        }
     })
     .catch(() => {
         localStorage.removeItem('token');
