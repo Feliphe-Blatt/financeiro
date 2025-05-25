@@ -63,8 +63,8 @@ public class MovimentacaoController {
     @GetMapping("/relatorio/categoria")
     public ResponseEntity<?> relatorioPorCategoria(@RequestParam String categoria) {
         RelatorioPorCategoriaStrategy strategy = new RelatorioPorCategoriaStrategy(categoria);
-        List<Movimentacao> resultado = movimentacaoService.gerarRelatorio(strategy);
-        return ResponseEntity.ok(resultado);
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
+        return ResponseEntity.ok(dtos);
     }
 
 }

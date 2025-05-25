@@ -98,6 +98,13 @@ public class MovimentacaoService {
         return strategy.filtrar(todas);
     }
 
+    public List<MovimentacaoDTO.MovimentacaoResponseDTO> gerarRelatorioDTO(RelatorioStrategy strategy) {
+        List<Movimentacao> filtradas = gerarRelatorio(strategy);
+        return filtradas.stream()
+                .map(this::mapearParaDTO)
+                .toList();
+    }
+
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {
         boolean isReceita = movimentacaoDTO.isReceita();
         if ((isReceita && !"Receita".equals(categoria.getNomeCategoria().getTipo())) ||
