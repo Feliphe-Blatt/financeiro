@@ -8,12 +8,14 @@ import com.controlefinanceiro.api.model.Usuario;
 import com.controlefinanceiro.api.repository.CategoriaRepository;
 import com.controlefinanceiro.api.repository.MovimentacaoRepository;
 import com.controlefinanceiro.api.repository.UsuarioRepository;
+import com.controlefinanceiro.api.strategy.RelatorioStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -79,6 +81,21 @@ public class MovimentacaoService {
                     return dto;
                 })
                 .toList();
+    }
+
+    public BigDecimal calcularSaldoUsuarioLogado() {
+        Usuario usuario = obterUsuarioLogado();
+        BigDecimal saldo = movimentacaoRepository.findByUsuarioId(usuario.getId())
+                .stream()
+                .map(mov -> mov.isReceita() ? mov.getValor() : mov.getValor().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return saldo;
+    }
+
+    public List<Movimentacao> gerarRelatorio(RelatorioStrategy strategy) {
+        Usuario usuario = obterUsuarioLogado();
+        List<Movimentacao> todas = movimentacaoRepository.findByUsuarioId(usuario.getId());
+        return strategy.filtrar(todas);
     }
 
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {

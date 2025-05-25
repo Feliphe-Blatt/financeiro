@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financeiro | Home</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            <div class="sidebar">
+                <h3>Central</h3>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">payments</span>
+                    <h3>Transações</h3>
+                </a>
+
+                <h3 class="section-separator">Sistema</h3>
+                <a href="#">
+                    <span class="material-icons-sharp">settings</span>
+                    <h3>Configurações</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">help_outline</span>
+                    <h3>Suporte ao Cliente</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <div class="search-bar">
+                <span class="material-icons-sharp">search</span>
+                <input type="search" placeholder="Search">
+            </div>
+
+            <div class="content-panel">
+                <div class="saldo-atual-container">
+                    <span class="saldo-label">SALDO ATUAL</span>
+                    <span class="saldo-valor" id="saldoAtual">R$ 0,00</span>
+                </div>
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>RESUMO SEMANAL</h3>
+                        <div class="chart-flex">
+                            <canvas id="pieChart1"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>METAS</h3>
+                        <div class="chart-flex">
+                            <canvas id="pieChart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="scripts/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    
+</body>
+</html> 
