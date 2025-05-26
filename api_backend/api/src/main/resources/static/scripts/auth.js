@@ -26,3 +26,24 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'login.html';
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            if (token) {
+                fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token
+                    }
+                }).finally(() => {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login.html';
+                });
+            }
+        });
+    }
+});

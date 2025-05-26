@@ -1,5 +1,6 @@
 package com.controlefinanceiro.api.service;
 
+import com.controlefinanceiro.api.config.TokenBlacklist;
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
 import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import com.controlefinanceiro.api.model.Categoria;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;

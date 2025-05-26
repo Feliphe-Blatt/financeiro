@@ -84,21 +84,53 @@ function formatarReal(valor) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const token = localStorage.getItem('token'); // ou de onde você armazena o JWT
+    const token = localStorage.getItem('token');
 
+    // Buscar saldo
     fetch('/api/movimentacoes/usuario/saldo', {
-        headers: {
-            'Authorization': token
-        }
-    })    .then(response => {
-              if (!response.ok) throw new Error('Erro ao buscar saldo');
-              return response.json();
-          })
-          .then(saldo => {
-              const valor = saldo;
-              document.getElementById('saldoAtual').textContent = formatarReal(saldo);
-          })
-          .catch(() => {
-              document.getElementById('saldoAtual').textContent = 'Erro ao carregar saldo';
-          });
-      })
+        headers: { 'Authorization': token }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Erro ao buscar saldo');
+        return response.json();
+    })
+    .then(saldo => {
+        document.getElementById('saldoAtual').textContent = formatarReal(saldo);
+    })
+    .catch(() => {
+        document.getElementById('saldoAtual').textContent = 'Erro ao carregar saldo';
+    });
+
+    // Buscar movimentações e alimentar gráfico
+    fetch('/api/movimentacoes/usuario-movimentacoes', {
+        headers: { 'Authorization': token }
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Erro ao buscar movimentações');
+        return response.json();
+    })
+    .then(movimentacoes => {
+        // Agrupar por categoria
+        const categoriaTotais = {};
+        movimentacoes.forEach(mov => {
+            const categoria = mov.categoria;
+            const valor = mov.valor;
+            if (!categoriaTotais[categoria]) {
+                categoriaTotais[categoria] = 0;
+            }
+            categoriaTotais[categoria] += valor;
+        });
+
+        // Preparar dados para o gráfico
+        const labels = Object.keys(categoriaTotais);
+        const data = Object.values(categoriaTotais);
+
+        // Atualizar gráfico
+        pieChart1.data.labels = labels;
+        pieChart1.data.datasets[0].data = data;
+        pieChart1.update();
+    })
+    .catch(() => {
+        // Trate o erro conforme necessário
+    });
+});
