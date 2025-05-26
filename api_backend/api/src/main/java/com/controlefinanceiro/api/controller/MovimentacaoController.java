@@ -100,4 +100,25 @@ public class MovimentacaoController {
         List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.gerarRelatorioDTO(strategy);
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/relatorios")
+    public ResponseEntity<?> relatorioPersonalizado(
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) Boolean isReceita,
+            @RequestParam(required = false) LocalDate dataInicio,
+            @RequestParam(required = false) LocalDate dataFim,
+            @RequestParam(required = false) BigDecimal valorMinimo,
+            @RequestParam(required = false) BigDecimal valorMaximo
+    ) {
+        try {
+            List<MovimentacaoDTO.MovimentacaoResponseDTO> dtos = movimentacaoService.relatorioPersonalizado(
+                    categoria, tipo, isReceita, dataInicio, dataFim, valorMinimo, valorMaximo
+            );
+            return ResponseEntity.ok(dtos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao gerar relatório: " + e.getMessage());
+        }
+    }
 }

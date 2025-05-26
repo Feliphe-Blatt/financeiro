@@ -8,7 +8,7 @@ import com.controlefinanceiro.api.model.Usuario;
 import com.controlefinanceiro.api.repository.CategoriaRepository;
 import com.controlefinanceiro.api.repository.MovimentacaoRepository;
 import com.controlefinanceiro.api.repository.UsuarioRepository;
-import com.controlefinanceiro.api.strategy.RelatorioStrategy;
+import com.controlefinanceiro.api.strategy.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -103,6 +106,26 @@ public class MovimentacaoService {
         return filtradas.stream()
                 .map(this::mapearParaDTO)
                 .toList();
+    }
+
+    public List<MovimentacaoDTO.MovimentacaoResponseDTO> relatorioPersonalizado(
+            String categoria,
+            String tipo,
+            Boolean isReceita,
+            LocalDate dataInicio,
+            LocalDate dataFim,
+            BigDecimal valorMinimo,
+            BigDecimal valorMaximo
+    ) {
+        List<RelatorioStrategy> strategies = new ArrayList<>();
+        if (categoria != null) strategies.add(new RelatorioPorCategoriaStrategy(categoria));
+        if (tipo != null) strategies.add(new RelatorioPorTipoStrategy(tipo));
+        if (isReceita != null) strategies.add(new RelatorioPorReceitaDespesaStrategy(isReceita));
+        if (dataInicio != null || dataFim != null) strategies.add(new RelatorioPorDataStrategy(dataInicio, dataFim));
+        if (valorMinimo != null || valorMaximo != null) strategies.add(new RelatorioPorValorStrategy(valorMinimo, valorMaximo));
+
+        RelatorioCombinadoStrategy combinado = new RelatorioCombinadoStrategy(strategies);
+        return gerarRelatorioDTO(combinado);
     }
 
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {
