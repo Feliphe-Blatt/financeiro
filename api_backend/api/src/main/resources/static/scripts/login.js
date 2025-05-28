@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.querySelector('.login-form');
 
-
     // Evento para o formulário de login
     loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
