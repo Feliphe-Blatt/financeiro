@@ -1,11 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.querySelector('.login-form');
 
-    // Credenciais do admin
-//   const adminCredentials = {
-//        email: 'admin@admin.com',
-//        password: 'admin123'
-//    };
 
     // Evento para o formulário de login
     loginForm.addEventListener('submit', async function(e) {
