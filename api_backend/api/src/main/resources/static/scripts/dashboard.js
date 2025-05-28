@@ -83,6 +83,19 @@ function formatarReal(valor) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+// Definir as categorias por tipo (baseado na imagem fornecida)
+const categoriasPorTipo = {
+    true: [ // Receita
+        "SALARIO", "BONUS", "FREELANCER", "VENDA",
+        "RENDIMENTO", "INVESTIMENTO", "OUTROS"
+    ],
+    false: [ // Despesa
+        "LAZER", "EDUCACAO", "MORADIA", "TRANSPORTE",
+        "ALIMENTACAO", "SAUDE", "PRESENTES", "PET",
+        "INVESTIMENTOS", "ASSINATURAS", "OUTROS"
+    ]
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const token = localStorage.getItem('token');
 
@@ -133,4 +146,74 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(() => {
         // Trate o erro conforme necessário
     });
+    
+    
+    // Função para criar movimentação
+    document.getElementById('formMovimentacao').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const movimentacao = {
+            isReceita: form.isReceita.value === "true",
+            valor: parseFloat(form.valor.value),
+            categoria: form.categoria.value,
+            data: form.data.value,
+            descricao: form.descricao.value
+        };
+
+        fetch('/api/movimentacoes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify(movimentacao)
+        })
+        .then(response => {
+            if (response.status !== 201) throw new Error('Erro ao criar movimentação');
+            location.reload();
+        })
+        .catch(error => {
+            alert('Erro ao criar movimentação');
+        });
+    });
+
+    // Mostrar/ocultar formulário de movimentação
+    document.getElementById('btnMostrarFormMovimentacao').addEventListener('click', function() {
+        const form = document.getElementById('formMovimentacao');
+        if (form.style.display === 'none' || form.style.display === '') {
+            form.style.display = 'flex';
+            // Quando o formulário abrir, carregar as categorias iniciais (Despesa)
+            atualizarCategorias(false);
+        } else {
+            form.style.display = 'none';
+        }
+    });
+
+    // Função para atualizar as opções de categoria
+    function atualizarCategorias(isReceita) {
+        const selectCategoria = document.getElementById('categoria');
+        const categorias = categoriasPorTipo[isReceita];
+
+        // Limpa as opções atuais
+        selectCategoria.innerHTML = '<option value="">Selecione a Categoria</option>';
+
+        // Adiciona as novas opções
+        categorias.forEach(categoria => {
+            const option = document.createElement('option');
+            option.value = categoria;
+            option.textContent = categoria;
+            selectCategoria.appendChild(option);
+        });
+    }
+
+    // Adicionar evento para o select de Tipo (isReceita)
+    document.getElementById('isReceita').addEventListener('change', function(event) {
+        const isReceitaSelecionada = event.target.value === "true";
+        atualizarCategorias(isReceitaSelecionada);
+    });
+
+    // Carregar categorias iniciais ao carregar a página (para o estado inicial do select de tipo)
+    const isReceitaInicial = document.getElementById('isReceita').value === "true";
+    atualizarCategorias(isReceitaInicial);
 });
