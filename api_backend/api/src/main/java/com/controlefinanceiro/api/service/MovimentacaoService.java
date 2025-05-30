@@ -1,8 +1,6 @@
 package com.controlefinanceiro.api.service;
 
-import com.controlefinanceiro.api.config.TokenBlacklist;
 import com.controlefinanceiro.api.dto.MovimentacaoDTO;
-import com.controlefinanceiro.api.enums.TipoCategoriaEnum;
 import com.controlefinanceiro.api.model.Categoria;
 import com.controlefinanceiro.api.model.Movimentacao;
 import com.controlefinanceiro.api.model.Usuario;
@@ -10,11 +8,21 @@ import com.controlefinanceiro.api.repository.CategoriaRepository;
 import com.controlefinanceiro.api.repository.MovimentacaoRepository;
 import com.controlefinanceiro.api.repository.UsuarioRepository;
 import com.controlefinanceiro.api.strategy.*;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import java.util.stream.Collectors;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -73,6 +81,37 @@ public class MovimentacaoService {
     }
 
     @Transactional(readOnly = true)
+    public Page<MovimentacaoDTO.MovimentacaoResponseDTO> getPaginadoComFiltrosStrategy(
+            Boolean isReceita,
+            String tipo,
+            String categoria,
+            LocalDate dataInicio,
+            LocalDate dataFim,
+            Pageable pageable) {
+
+        Usuario usuario = obterUsuarioLogado();
+
+        List<Movimentacao> movimentacoes = movimentacaoRepository.findByUsuarioId(usuario.getId());
+
+        List<RelatorioStrategy> strategies = new ArrayList<>();
+        if (tipo != null && !tipo.isEmpty()) strategies.add(new RelatorioPorTipoStrategy(tipo));
+        if (categoria != null && !categoria.isEmpty()) strategies.add(new RelatorioPorCategoriaStrategy(categoria));
+        if (isReceita != null) strategies.add(new RelatorioPorReceitaDespesaStrategy(isReceita));
+        if (dataInicio != null || dataFim != null) strategies.add(new RelatorioPorDataStrategy(dataInicio, dataFim));
+        // Adicione outros filtros conforme necessário
+
+        List<Movimentacao> filtradas = new RelatorioCombinadoStrategy(strategies).filtrar(movimentacoes);
+
+        // Paginação manual
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filtradas.size());
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> pageContent = filtradas.subList(start, end).stream()
+                .map(this::mapearParaDTO).collect(Collectors.toList());
+
+        return new PageImpl<>(pageContent, pageable, filtradas.size());
+    }
+
+    @Transactional(readOnly = true)
     public List<MovimentacaoDTO.MovimentacaoResponseDTOTelaInicial> getMovimentacoesUsuarioTelaInicial() {
         Usuario usuario = obterUsuarioLogado();
 
@@ -125,6 +164,37 @@ public class MovimentacaoService {
 
         RelatorioCombinadoStrategy combinado = new RelatorioCombinadoStrategy(strategies);
         return gerarRelatorioDTO(combinado);
+    }
+
+    public void exportarRelatorioCsv(
+            HttpServletResponse response,
+            String categoria,
+            String tipo,
+            Boolean isReceita,
+            LocalDate dataInicio,
+            LocalDate dataFim,
+            BigDecimal valorMinimo,
+            BigDecimal valorMaximo
+    ) throws IOException {
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=relatorio.csv");
+
+        List<MovimentacaoDTO.MovimentacaoResponseDTO> movimentacoes = relatorioPersonalizado(
+                categoria, tipo, isReceita, dataInicio, dataFim, valorMinimo, valorMaximo
+        );
+
+        PrintWriter writer = response.getWriter();
+        writer.println("Data,Tipo,Categoria,Valor,Descrição");
+        for (MovimentacaoDTO.MovimentacaoResponseDTO mov : movimentacoes) {
+            writer.printf("%s,%s,%s,%.2f,%s%n",
+                    mov.getData(),
+                    mov.getTipoDaMovimentacao(),
+                    mov.getCategoria(),
+                    mov.getValor(),
+                    mov.getDescricao() != null ? mov.getDescricao() : ""
+            );
+        }
+        writer.flush();
     }
 
     private void validarMovimentacaoIsReceita(MovimentacaoDTO.MovimentacaoRequestDTO movimentacaoDTO, Categoria categoria) {

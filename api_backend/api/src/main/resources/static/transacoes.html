@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Transações</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="sidebar">
+            <h3>Central</h3>
+            <a href="index.html">
+                <span class="material-icons-sharp">dashboard</span>
+                <h3>Dashboard</h3>
+            </a>
+            <a href="transacoes.html" class="active">
+                <span class="material-icons-sharp">payments</span>
+                <h3>Transações</h3>
+            </a>
+            <h3 class="section-separator">Sistema</h3>
+            <a href="#">
+                <span class="material-icons-sharp">settings</span>
+                <h3>Configurações</h3>
+            </a>
+            <a href="#">
+                <span class="material-icons-sharp">help_outline</span>
+                <h3>Suporte ao Cliente</h3>
+            </a>
+            <a href="#" id="logoutBtn">
+                <span class="material-icons-sharp">logout</span>
+                <h3>Sair</h3>
+            </a>
+        </div>
+    </aside>
+    <main>
+        <h2>Transações</h2>
+
+        <form id="filtroExportacao" class="filtros-transacoes">
+            <div class="campo">
+                <label for="dataInicio">Data Início:</label>
+                <input type="date" id="dataInicio" name="dataInicio">
+            </div>
+            <div class="campo">
+                <label for="dataFim">Data Fim:</label>
+                <input type="date" id="dataFim" name="dataFim">
+            </div>
+            <div class="campo">
+                <label for="isReceita">Receita/Despesa:</label>
+                <select id="isReceita" name="isReceita">
+                    <option value="">Todos</option>
+                    <option value="true">Receita</option>
+                    <option value="false">Despesa</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="tipo">Tipo:</label>
+                <select id="tipo" name="tipo">
+                    <option value="fixa">Fixa</option>
+                    <option value="variavel">Variavel</option>
+                    <option value="extra">Extra</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="categoria">Categoria:</label>
+                <input type="text" id="categoria" name="categoria" placeholder="Categoria">
+            </div>
+            <div class="campo">
+                <button type="button" id="btnExportarCsv">Exportar CSV</button>
+            </div>
+        </form>
+        <div style="overflow-x:auto;">
+            <table id="tabelaTransacoes" class="tabela-transacoes"></table>
+        </div>
+        <div id="paginacao" style="margin: 1rem 0;"></div>
+        <button id="btnAnterior">Anterior</button>
+        <button id="btnProxima">Próxima</button>
+    </main>
+</div>
+<script src="scripts/auth.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/transacoes.js"></script>
+</body>
+</html>

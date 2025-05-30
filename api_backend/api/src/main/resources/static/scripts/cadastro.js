@@ -5,7 +5,8 @@ document.querySelector('.register-form').addEventListener('submit', async functi
     const senha = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:8080/api/usuarios', {
+            const API_URL = `${API_BASE_URL}/api/usuarios`;
+            const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

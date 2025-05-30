@@ -449,4 +449,124 @@ main {
     color: var(--color-primary);
     font-weight: 700;
     letter-spacing: 1px;
-} 
+}
+
+/* Tabela de Transações */
+.tabela-transacoes {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.tabela-transacoes th, .tabela-transacoes td {
+    padding: 1rem 0.75rem;
+    text-align: left;
+}
+
+.tabela-transacoes th {
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 1rem;
+    border-bottom: 2px solid var(--color-light);
+}
+
+.tabela-transacoes tr:nth-child(even) {
+    background: var(--color-light);
+}
+
+.tabela-transacoes tr:hover {
+    background: var(--color-background);
+    transition: background 0.2s;
+}
+
+.tabela-transacoes td {
+    color: var(--color-dark);
+    font-size: 0.98rem;
+    border-bottom: 1px solid var(--color-light);
+}
+
+/* Paginação */
+#paginacao {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--color-dark);
+    margin-bottom: 1rem;
+}
+
+/* Botões de Paginação */
+#btnAnterior, #btnProxima {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    box-shadow: var(--box-shadow);
+}
+
+#btnAnterior:disabled, #btnProxima:disabled {
+    background: var(--color-grey);
+    cursor: not-allowed;
+}
+
+#btnAnterior:hover:not(:disabled), #btnProxima:hover:not(:disabled) {
+    background: var(--color-sidebar-bg);
+}
+
+.filtros-transacoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    align-items: flex-end;
+}
+.filtros-transacoes .campo {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+.filtros-transacoes label {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: #333;
+}
+.filtros-transacoes input,
+.filtros-transacoes select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+.filtros-transacoes button {
+    padding: 0.5rem 1rem;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+.filtros-transacoes button:hover {
+    background: #125ea8;
+}
+@media (max-width: 700px) {
+    .filtros-transacoes {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .filtros-transacoes .campo {
+        min-width: 100%;
+    }
+}

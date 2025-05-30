@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value;
         const senha = document.getElementById('password').value;
 
-        try {   
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+        try {
+            const API_URL = `${API_BASE_URL}/api/auth/login`;;
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

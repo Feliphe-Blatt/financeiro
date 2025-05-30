@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Testa se o token é válido
-    fetch('http://localhost:8080/api/usuarios', {
+    fetch(`${API_BASE_URL}/api/usuarios`, {
         headers: {
             'Authorization': token
         }
