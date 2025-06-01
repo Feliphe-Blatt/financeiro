@@ -159,9 +159,9 @@ DELETE /api/transacoes/{id}   # Excluir transação
 
 ### Ferramentas de Teste
 
-- **Insomnia/Postman**: Importe a coleção em `docs/` (se disponível)
+- **Insomnia/Postman**: Coleção utilizada em `docs/`
 - **Interface Web**: Use a interface integrada para testes funcionais
-- **DBeaver**: Conecte-se ao PostgreSQL para verificar os dados
+- **DBeaver**: Conectado ao PostgreSQL para verificar os dados, arquivo de exportação encontra-se também em 'docs/'
 
 ## 🔒 Segurança
 
@@ -181,7 +181,7 @@ DELETE /api/transacoes/{id}   # Excluir transação
 
 ## 📖 Documentação
 
-- [Documentação da API](./api_backend/docs/Documentação.MD) *(se disponível)*
+- [Documentação da API](./api_backend/docs/Documentação.MD)
 - [Requisitos do Projeto](./projetoControleFinanceiro.pdf)
 
 ## 🤝 Contribuindo
