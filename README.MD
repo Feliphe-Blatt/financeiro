@@ -161,7 +161,7 @@ DELETE /api/transacoes/{id}   # Excluir transação
 
 - **Insomnia/Postman**: Coleção utilizada em `docs/`
 - **Interface Web**: Use a interface integrada para testes funcionais
-- **DBeaver**: Conectado ao PostgreSQL para verificar os dados, arquivo de exportação encontra-se também em 'docs/'
+- **DBeaver**: Conectado ao PostgreSQL para verificar os dados, arquivo de exportação encontra-se também em `docs/`
 
 ## 🔒 Segurança
 
