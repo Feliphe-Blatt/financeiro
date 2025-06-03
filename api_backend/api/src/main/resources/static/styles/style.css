@@ -1,19 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-/* Resets básicos e variáveis de cor */
+
 :root {
-    --color-primary: #4CAF50; /* Verde principal */
+    --color-primary: #4CAF50; 
     --color-light: #f8f9fa;
     --color-white: #ffffff;
     --color-dark: #343a40;
     --color-grey: #adb5bd;
-    --color-sidebar-bg: #388E3C; /* Verde mais escuro para sidebar */
+    --color-sidebar-bg: #388E3C; 
     --color-sidebar-text: #ffffff;
     --color-sidebar-active-bg: #ffffff;
     --color-sidebar-active-text: #4CAF50;
-    --color-background: #f1f5f9; /* Fundo principal ligeiramente cinza */
+    --color-background: #f1f5f9; 
     --card-border-radius: 1rem;
     --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+    --color-bg-main: #f8f9fa;
+    --color-bg-panel: #fff;
+    --color-bg-form: #fff;
+    --color-text-main: #222;
+    --color-border: #adb5bd;
+}
+
+body.tema-escuro {
+    --color-primary: #4CAF50;
+    --color-light: #23272e;
+    --color-white: #181a1b;
+    --color-dark: #e0e6ed;
+    --color-grey: #444;
+    --color-sidebar-bg: #23272b;
+    --color-sidebar-text: #f8f9fa;
+    --color-sidebar-active-bg: #2e3440;
+    --color-sidebar-active-text: #4CAF50;
+    --color-background: #181a1b;
+
+    --color-bg-main: #181a1b;
+    --color-bg-panel: #23272b;
+    --color-bg-form: #23272b;
+    --color-text-main: #f8f9fa;
+    --color-border: #444;
 }
 
 * {
@@ -65,7 +90,7 @@ h3 {
     font-weight: 500;
 }
 
-/* Estilos para a página de login */
+
 .login-section {
     max-width: 400px;
     margin: 0 auto;
@@ -568,5 +593,350 @@ main {
     }
     .filtros-transacoes .campo {
         min-width: 100%;
+    }
+}
+
+body.tema-claro {
+    background: #f8f9fa;
+    color: #222;
+}
+:root {
+    --color-bg-main: #f8f9fa;
+    --color-bg-panel: #fff;
+    --color-bg-form: #fff;
+    --color-text-main: #222;
+    --color-border: #adb5bd;
+}
+
+body.tema-escuro {
+    --color-bg-main: #181a1b;
+    --color-bg-panel: #23272b;
+    --color-bg-form: #23272b;
+    --color-text-main: #f8f9fa;
+    --color-border: #444;
+}
+
+body {
+    background: var(--color-bg-main);
+    color: var(--color-text-main);
+}
+
+.content-panel,
+.admin-profile,
+.form-container,
+.chart-card {
+    background: var(--color-bg-panel);
+    color: var(--color-text-main);
+}
+
+form,
+input,
+select,
+textarea {
+    background: var(--color-bg-form);
+    color: var(--color-text-main);
+    border: 1px solid var(--color-border);
+}
+
+input::placeholder,
+select,
+textarea::placeholder {
+    color: var(--color-border);
+}
+
+body.tema-escuro .filtros-transacoes {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+}
+
+body.tema-escuro .filtros-transacoes label {
+    color: var(--color-text-main);
+}
+
+body.tema-escuro .filtros-transacoes input,
+body.tema-escuro .filtros-transacoes select {
+    background: var(--color-bg-form);
+    color: var(--color-text-main);
+    border: 1px solid var(--color-border);
+}
+
+body.tema-escuro .filtros-transacoes button {
+    background: #388E3C;
+    color: #fff;
+}
+
+body.tema-escuro .filtros-transacoes button:hover {
+    background: #2e7030;
+}
+
+body.tema-escuro .login-btn,
+body.tema-escuro .register-link,
+body.tema-escuro h2,
+body.tema-escuro h3,
+body.tema-escuro label {
+    color: #f8f9fa !important;
+}
+
+body.tema-escuro .login-btn {
+    background: #388E3C;
+}
+
+body.tema-escuro .login-btn:hover {
+    background: #2e7030;
+}
+
+body.tema-escuro .register-link {
+    color: #4CAF50 !important;
+}
+body.tema-escuro .register-link:hover {
+    color: #81c784 !important;
+}
+
+body.tema-escuro .tabela-transacoes {
+    background: #23272e;
+    color: #f8f9fa;
+}
+
+body.tema-escuro .tabela-transacoes th {
+    background: #2e3440;
+    color: #e0e6ed;
+    border-bottom: 2px solid #3b4252;
+}
+
+body.tema-escuro .tabela-transacoes td {
+    color: #e0e6ed;
+    border-bottom: 1px solid #3b4252;
+}
+
+body.tema-escuro .tabela-transacoes tr:nth-child(even) {
+    background: #282c34;
+}
+
+body.tema-escuro .tabela-transacoes tr:hover {
+    background: #363b44;
+}
+
+body.tema-claro .sidebar a,
+body.tema-claro .sidebar h3 {
+    color: #23272b;
+}
+
+body.tema-escuro .sidebar a,
+body.tema-escuro .sidebar h3 {
+    color: #f8f9fa;
+}
+
+body.tema-escuro .sidebar a.active {
+    background-color: #2e3440; 
+    color: #4CAF50;
+}
+
+body.tema-escuro .sidebar a.active h3 {
+    color: #4CAF50;
+}
+
+body.tema-escuro #btnMostrarFormMovimentacao {
+    background: #23272b !important;
+    color: #4CAF50 !important;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.18);
+}
+body.tema-escuro #btnMostrarFormMovimentacao:hover {
+    background: #2e3440 !important;
+}
+
+
+
+body.tema-escuro .saldo-atual-container {
+    background: #23272b;
+    box-shadow: 0 0.5rem 1rem rgba(60, 60, 60, 0.18);
+    border: 1px solid #353a40;
+}
+
+body.tema-escuro .saldo-label {
+    color: #bfc7d5 !important;
+}
+
+body.tema-escuro .saldo-valor {
+    color: #81c784 !important;
+}
+
+/* --- Correção visual para integração total com o tema --- */
+
+/* Formulário de Nova Movimentação */
+#novaMovimentacaoForm,
+.form-nova-movimentacao {
+    background: var(--color-bg-panel) !important;
+    color: var(--color-text-main) !important;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    border: 1px solid var(--color-border);
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+#novaMovimentacaoForm label,
+.form-nova-movimentacao label {
+    color: var(--color-text-main) !important;
+    font-weight: 500;
+}
+
+#novaMovimentacaoForm input,
+#novaMovimentacaoForm select,
+#novaMovimentacaoForm textarea,
+.form-nova-movimentacao input,
+.form-nova-movimentacao select,
+.form-nova-movimentacao textarea {
+    background: var(--color-bg-form) !important;
+    color: var(--color-text-main) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 0.5rem;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#novaMovimentacaoForm input:focus,
+#novaMovimentacaoForm select:focus,
+#novaMovimentacaoForm textarea:focus,
+.form-nova-movimentacao input:focus,
+.form-nova-movimentacao select:focus,
+.form-nova-movimentacao textarea:focus {
+    border-color: var(--color-primary) !important;
+    outline: none;
+}
+
+#novaMovimentacaoForm button,
+.form-nova-movimentacao button {
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+#novaMovimentacaoForm button:hover,
+.form-nova-movimentacao button:hover {
+    background: var(--color-sidebar-bg) !important;
+}
+
+/* Formulário de Login e container externo */
+.login-section,
+.login-container {
+    background: var(--color-bg-panel) !important;
+    color: var(--color-text-main) !important;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--color-border);
+}
+
+.login-section h2,
+.login-container h2 {
+    color: var(--color-primary) !important;
+}
+
+.form-group label {
+    color: var(--color-text-main) !important;
+}
+
+.form-group input {
+    background: var(--color-bg-form) !important;
+    color: var(--color-text-main) !important;
+    border: 1px solid var(--color-border) !important;
+}
+
+.form-group input:focus {
+    border-color: var(--color-primary) !important;
+    outline: none;
+}
+
+#formMovimentacao {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin: 1rem 1rem 2rem 1rem;
+    background: var(--color-bg-panel);
+    padding: 1.5rem 2rem;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    min-height: 300px;
+    min-width: 390px;
+    max-width: 555px;
+    border: 1px solid var(--color-border);
+}
+
+#formMovimentacao legend {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+#formMovimentacao > div {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+#formMovimentacao label {
+    font-weight: 500;
+    color: var(--color-text-main);
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
+#formMovimentacao select,
+#formMovimentacao input[type="number"],
+#formMovimentacao input[type="date"],
+#formMovimentacao input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-bg-form);
+    color: var(--color-text-main);
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#formMovimentacao select:focus,
+#formMovimentacao input[type="number"]:focus,
+#formMovimentacao input[type="date"]:focus,
+#formMovimentacao input[type="text"]:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+#formMovimentacao button {
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: var(--color-primary);
+    color: var(--color-white);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(76,175,80,0.08);
+    transition: background 0.2s;
+}
+
+#formMovimentacao button:hover {
+    background: var(--color-sidebar-bg);
+}
+
+@media (max-width: 700px) {
+    #formMovimentacao > div {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }

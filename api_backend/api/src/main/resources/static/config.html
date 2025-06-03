@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Configurações</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="sidebar">
+            <h3>Central</h3>
+                <a href="#" class="active">
+                    <span class="material-icons-sharp">dashboard</span>
+                    <h3>Dashboard</h3>
+                </a>
+                <a href="transacoes.html">
+                    <span class="material-icons-sharp">payments</span>
+                    <h3>Transações</h3>
+                </a>
+
+                <h3 class="section-separator">Sistema</h3>
+                <a href="config.html">
+                    <span class="material-icons-sharp">settings</span>
+                    <h3>Configurações</h3>
+                </a>
+                <a href="#" id="logoutBtn">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Sair</h3>
+                </a>
+        </div>
+    </aside>
+    <main>
+        <div class="content-panel" style="max-width: 500px; margin: 2rem auto;">
+            <h2 style="margin-bottom: 2rem;">Configurações</h2>
+            <form>
+                <label for="seletorTema" style="font-weight: 500; color: #343a40; margin-bottom: 0.5rem; display: block;">Tema da aplicação:</label>
+                <select id="seletorTema" style="width: 100%; padding: 0.7rem; border: 1px solid #adb5bd; border-radius: 0.5rem; background: #f8f9fa;">
+                    <option value="claro">Claro</option>
+                    <option value="escuro">Escuro</option>
+                </select>
+            </form>
+        </div>
+    </main>
+</div>
+<script src="scripts/tema.js"></script>
+<script src="scripts/config.js"></script>
+</body>
+</html>

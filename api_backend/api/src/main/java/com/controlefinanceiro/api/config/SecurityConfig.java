@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // Habilita CORS com configuração padrão
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login.html", "/index.html", "/cadastro.html", "/styles/**", "/scripts/**", "/transacoes.html").permitAll()
+                        .requestMatchers("/login.html", "/index.html", "/cadastro.html", "/styles/**", "/scripts/**", "/transacoes.html", "/config.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                         .requestMatchers("/auth/**").permitAll()
