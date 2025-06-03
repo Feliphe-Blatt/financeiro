@@ -1,10 +1,21 @@
 function formatarReal(valor) {
-    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-async function buscarTransacoesPaginadas(page = 0, size = 10) {
+function obterFiltrosDoFormulario() {
+    const form = document.getElementById('filtroExportacao');
+    const formData = new FormData(form);
+    const filtros = {};
+    for (const [key, value] of formData.entries()) {
+        if (value !== '') filtros[key] = value;
+    }
+    return filtros;
+}
+
+async function buscarTransacoesPaginadasComFiltro(page = 0, size = 10, filtros = {}) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`/api/movimentacoes/usuario-movimentacoes-paginado?page=${page}&size=${size}`, {
+    const params = new URLSearchParams({ page, size, ...filtros }).toString();
+    const response = await fetch(`/api/movimentacoes/usuario-movimentacoes-paginado?${params}`, {
         headers: { 'Authorization': token }
     });
     if (!response.ok) throw new Error('Erro ao buscar transações');
@@ -22,12 +33,18 @@ function renderizarTransacoes(transacoes) {
             <th>Descrição</th>
         </tr>
     `;
+    if (!transacoes || transacoes.length === 0) {
+        const linha = document.createElement('tr');
+        linha.innerHTML = `<td colspan="5" style="text-align:center;">Nenhuma transação encontrada.</td>`;
+        tabela.appendChild(linha);
+        return;
+    }
     transacoes.forEach(transacao => {
         const linha = document.createElement('tr');
         linha.innerHTML = `
-            <td>${transacao.data}</td>
-            <td>${transacao.tipoDaMovimentacao}</td>
-            <td>${transacao.categoria}</td>
+            <td>${transacao.data || ''}</td>
+            <td>${transacao.tipoDaMovimentacao || ''}</td>
+            <td>${transacao.categoria || ''}</td>
             <td>${formatarReal(transacao.valor)}</td>
             <td>${transacao.descricao || ''}</td>
         `;
@@ -40,15 +57,22 @@ let totalPaginas = 1;
 
 async function atualizarTabela(page = 0) {
     try {
-        const data = await buscarTransacoesPaginadas(page, 10);
+        const filtros = obterFiltrosDoFormulario();
+        const data = await buscarTransacoesPaginadasComFiltro(page, 10, filtros);
         renderizarTransacoes(data.content);
         paginaAtual = data.number;
         totalPaginas = data.totalPages;
         document.getElementById('paginacao').textContent = `Página ${paginaAtual + 1} de ${totalPaginas}`;
     } catch (e) {
+        renderizarTransacoes([]);
+        document.getElementById('paginacao').textContent = '';
         alert('Erro ao carregar transações');
     }
 }
+
+document.getElementById('btnBuscar').addEventListener('click', function() {
+    atualizarTabela(0);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     atualizarTabela();
@@ -61,15 +85,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 });
 
-document.getElementById('btnExportarCsv').addEventListener('click', function() {
-    const form = document.getElementById('filtroExportacao');
-    const params = new URLSearchParams(new FormData(form)).toString();
+document.getElementById('btnExportarCsv').addEventListener('click', async function() {
+    const filtros = obterFiltrosDoFormulario();
+    const params = new URLSearchParams(filtros).toString();
     const token = localStorage.getItem('token');
-    fetch(`/api/movimentacoes/relatorios/csv?${params}`, {
-        headers: { 'Authorization': token }
-    })
-    .then(response => response.blob())
-    .then(blob => {
+    try {
+        const response = await fetch(`/api/movimentacoes/relatorios/csv?${params}`, {
+            headers: { 'Authorization': token }
+        });
+        if (!response.ok) {
+            alert('Erro ao exportar CSV');
+            return;
+        }
+        const blob = await response.blob();
+        if (!blob || blob.size === 0) {
+            alert('Nenhum dado encontrado para exportação.');
+            return;
+        }
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -78,5 +110,7 @@ document.getElementById('btnExportarCsv').addEventListener('click', function() {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-    });
+    } catch (e) {
+        alert('Erro ao exportar CSV');
+    }
 });
