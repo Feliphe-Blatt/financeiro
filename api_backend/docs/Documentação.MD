@@ -34,17 +34,17 @@ O projeto segue uma arquitetura em camadas:
 
 ## Pré-requisitos
 
-- Java 17+
+- Java 11+
 - Maven 3.6+
 - PostgreSQL 12+
 - Insomnia (para testes de API)
 - DBeaver (para visualização do banco de dados)
+
 ## Principais Entidades
 
-- **Movimentacao**: Registra transações financeiras
-- **Categoria**: Classifica as movimentações (FIXA, VARIAVEL ou EXTRA)
-- **Valor**: Armazena o valor monetário e identifica se é receita ou despesa
-- **Usuario**: Proprietário das movimentações
+- **Transacao**: Registra transações financeiras (receitas ou despesas)
+- **Categoria**: Classifica as transações (FIXA, VARIAVEL ou EXTRA)
+- **Usuario**: Proprietário das transações
 
 ### Categorização de Transações
 
@@ -61,73 +61,82 @@ O projeto segue uma arquitetura em camadas:
 
 ## Funcionalidades
 
-### Movimentações Financeiras
+- Cadastro e autenticação de usuários (JWT)
+- Registro de receitas e despesas
+- Categorização das transações
+- Dashboard e relatórios
+- Exportação de dados
 
-O sistema permite as seguintes operações para a entidade Movimentação:
+## Endpoints Principais
 
-- **Criar Movimentação**: Cadastro de novas movimentações financeiras (receitas ou despesas)
+```
+POST   /api/auth/login         # Autenticação (JWT)
+POST   /api/usuarios           # Cadastro de usuário
+GET    /api/transacoes         # Listar transações
+POST   /api/transacoes         # Criar transação
+PUT    /api/transacoes/{id}    # Atualizar transação
+DELETE /api/transacoes/{id}    # Excluir transação
+```
 
-### Endpoints
+### Exemplo de Payload para Criação de Transação
 
-#### Movimentações
-
-- **POST** `/api/movimentacoes`: Cria uma nova movimentação financeira
-  - Body:
-  ```json
-  {
-    "valor": {
-      "valor": 1500.00,
-      "tipo": "RECEITA"
-    },
-    "categoria": {
-      "tipo": "FIXA",
-      "nomeReceita": "SALARIO"
-    },
-    "usuarioId": 1,
-    "quantidade": 1
-  }
-  ```
-  - Response: Status 201 (Created)
-
-
-# Exemplos de Uso
-
-## Testando a API com Insomnia
-
-### Criação de Movimentação - Despesa (POST)
-![Insomnia - Criação de Despesa](./testes-insomnia/criarDespesa.png)
-
-Nesta imagem, vemos a requisição POST para `/api/movimentacoes` com o seguinte corpo:
 ```json
 {
-  "valor": {
-    "valor": 150.00,
-    "tipo": "DESPESA"
-  },
+  "valor": 150.00,
+  "tipo": "DESPESA",
   "categoria": {
     "tipo": "VARIAVEL",
-    "nomeDespesa": "ALIMENTACAO"
+    "nome": "ALIMENTACAO"
   },
   "usuarioId": 1,
   "quantidade": 1
 }
 ```
 
-O servidor retorna o status HTTP 201 (Created), confirmando o sucesso da operação.
+- `tipo`: "DESPESA" ou "RECEITA"
+- `categoria.tipo`: "FIXA", "VARIAVEL" ou "EXTRA"
+- `categoria.nome`: Nome da categoria (ex: "ALIMENTACAO", "SALARIO")
 
-### Criação de Movimentação - Receita (POST)
-![Insomnia - Criação de Receita](./testes-insomnia/criarReceita.png)
+### Resposta
 
-Nesta imagem, vemos a requisição POST para `/api/movimentacoes` com o seguinte corpo:
+Status 201 (Created) e objeto da transação criada.
+
+## Segurança
+
+- Autenticação baseada em tokens JWT
+- Senhas criptografadas com BCrypt
+- Configuração CORS para desenvolvimento
+- Validação de dados de entrada
+- Proteção contra CSRF
+
+## Exemplos de Uso
+
+### Testando a API com Insomnia
+
+#### Criação de Transação - Despesa (POST)
+
 ```json
 {
-  "valor": {
-    "valor": 2500.00,
-    "tipo": "RECEITA"
+  "valor": 150.00,
+  "tipo": "DESPESA",
+  "categoria": {
+    "tipo": "VARIAVEL",
+    "nome": "ALIMENTACAO"
   },
+  "usuarioId": 1,
+  "quantidade": 1
+}
+```
+
+#### Criação de Transação - Receita (POST)
+
+```json
+{
+  "valor": 2500.00,
+  "tipo": "RECEITA",
   "categoria": {
     "tipo": "FIXA",
-    "nomeReceita": "SALARIO"
+    "nome": "SALARIO"
   },
   "usuarioId": 1,
   "quantidade": 1
@@ -136,47 +145,29 @@ Nesta imagem, vemos a requisição POST para `/api/movimentacoes` com o seguinte
 
 ## Visualização no Banco de Dados (DBeaver)
 
-### Tabela de Movimentações
-![DBeaver - Tabela de Movimentações](./testes-dbeaver/tabelaMovimentacoes.png)
-
-Nesta captura, podemos ver a tabela `movimentacao` no banco de dados PostgreSQL contendo os registros inseridos através da API.
-
-### Tabela de Categorias
-![DBeaver - Tabela de Categorias](./testes-dbeaver/tabelaCategoria.png)
-
-Visualização da tabela `categoria` com os diferentes tipos de categorias para despesas e receitas.
-
-### Tabela de Valores
-![DBeaver - Tabela de Valores](./testes-dbeaver/tabelaValores.png)
-
-A tabela `valor` armazena os valores monetários e identifica se são receitas ou despesas.
+- Tabela de transações armazena receitas e despesas categorizadas
+- Tabela de categorias com diferentes tipos para despesas e receitas
 
 ### Consulta SQL
 
-Exemplo de consultas SQL executadas no DBeaver:
-
 ```sql
--- Consultar todas as movimentações
-SELECT * FROM movimentacao;
+-- Consultar todas as transações
+SELECT * FROM transacao;
 
 -- Consultar total de despesas
-SELECT SUM(v.valor) FROM movimentacao m
-JOIN valor v ON m.valor_id = v.id
-WHERE v.receita = false;
+SELECT SUM(valor) FROM transacao WHERE tipo = 'DESPESA';
 
 -- Consultar total de receitas
-SELECT SUM(v.valor) FROM movimentacao m
-JOIN valor v ON m.valor_id = v.id
-WHERE v.receita = true;
+SELECT SUM(valor) FROM transacao WHERE tipo = 'RECEITA';
 
--- Consultar movimentações por categoria
-SELECT c.tipo, COUNT(*) FROM movimentacao m
-JOIN categoria c ON m.categoria_id = c.id
-GROUP BY c.tipo;
+-- Consultar transações por categoria
+SELECT categoria, COUNT(*) FROM transacao GROUP BY categoria;
 ```
 
 ## Observações
 
-- As capturas de tela demonstram o fluxo completo desde a requisição HTTP até o armazenamento no banco de dados
 - As operações financeiras são corretamente categorizadas como receitas ou despesas
-- As movimentações são associadas a um usuário específico do sistema
+- As transações são associadas a um usuário específico do sistema
+- Para acessar endpoints protegidos, inclua o token JWT no header Authorization
+
+---
