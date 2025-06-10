@@ -40,24 +40,40 @@ Um sistema completo de gerenciamento de finanças pessoais desenvolvido com Spri
   - `config.js`: preferências/configurações
   - `tema.js`: tema escuro/claro
 
-#### Exemplo de estrutura:
+## 🗂️ Estrutura do Projeto
+
 ```
-api_backend/api/src/main/resources/static/
-├── index.html
-├── transacoes.html
-├── login.html
-├── cadastro.html
-├── config.html
-├── scripts/
-│   ├── auth.js
-│   ├── login.js
-│   ├── cadastro.js
-│   ├── dashboard.js
-│   ├── transacoes.js
-│   ├── config.js
-│   └── tema.js
-├── styles/
-│   └── style.css
+api_backend/
+├── api/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/
+│   │   │   │       └── controlefinanceiro/
+│   │   │   │           └── api/
+│   │   │   ├── resources/
+│   │   │   │   ├── static/
+│   │   │   │   │   ├── index.html
+│   │   │   │   │   ├── transacoes.html
+│   │   │   │   │   ├── login.html
+│   │   │   │   │   ├── cadastro.html
+│   │   │   │   │   ├── config.html
+│   │   │   │   │   ├── scripts/
+│   │   │   │   │   │   ├── auth.js
+│   │   │   │   │   │   ├── login.js
+│   │   │   │   │   │   ├── cadastro.js
+│   │   │   │   │   │   ├── dashboard.js
+│   │   │   │   │   │   ├── transacoes.js
+│   │   │   │   │   │   ├── config.js
+│   │   │   │   │   │   └── tema.js
+│   │   │   │   │   ├── styles/
+│   │   │   │   │   │   └── style.css
+│   │   │   │   ├── application.properties
+│   ├── pom.xml
+│   └── Dockerfile
+├── docs/
+│   └── (coleções de testes, documentação, etc)
+└── ...
 ```
 
 ## 📊 Usando a Aplicação
