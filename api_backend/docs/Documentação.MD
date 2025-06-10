@@ -1,57 +1,61 @@
-# api-controle-financeiro
- 
 # API de Controle Financeiro
 
-Este projeto implementa uma API REST para gerenciamento financeiro pessoal utilizando Spring Boot.
+Este projeto implementa uma API REST para gerenciamento financeiro pessoal, utilizando Spring Boot.
 
 ## Tecnologias Utilizadas
 
-- Java
+- Java 11+
 - Spring Boot
 - Spring Data JPA
-- Maven
+- Maven 3.6+
 - Lombok
-- PostgreSQL
-- Insomnia
-- DBeaver
+- PostgreSQL 12+
+- Insomnia (para testes da API)
+- DBeaver (para visualização do banco de dados)
 
 ## Estrutura do Projeto
 
-O projeto segue uma arquitetura em camadas:
-
-- **Model**: Entidades JPA que representam as tabelas do banco de dados
-- **Repository**: Interfaces que estendem JpaRepository para operações de persistência
-- **Service**: Classes que implementam a lógica de negócio
-- **Controller**: Endpoints REST que recebem as requisições HTTP
-- **DTO**: Objetos de transferência de dados entre camadas
-- **Deserializer**: Classes para deserialização personalizada de dados JSON
+O projeto segue a arquitetura em camadas:
+- **Model:** Entidades JPA que representam as tabelas do banco de dados.
+- **Repository:** Interfaces que estendem JpaRepository para operações de persistência.
+- **Service:** Classes contendo a lógica de negócio.
+- **Controller:** Endpoints REST que recebem as requisições HTTP.
+- **DTO:** Objetos para transferência de dados entre camadas.
+- **Deserializer:** Classes para deserialização personalizada de dados JSON.
 
 ## Como Executar
 
-1. Clone o repositório
-2. Configure o banco de dados no arquivo `application.properties` localizado em `resources`
-3. Execute o comando: `mvn spring-boot:run`
+1. Clone o repositório:
+   ```sh
+   git clone https://github.com/Feliphe-Blatt/financeiro.git
+   ```
+2. Configure o banco de dados no arquivo `application.properties`, localizado em `src/main/resources`.
+3. Execute o comando:
+   ```sh
+   mvn spring-boot:run
+   ```
+4. Acesse a API em `http://localhost:8080`.
 
 ## Pré-requisitos
 
-- Java 11+
-- Maven 3.6+
-- PostgreSQL 12+
-- Insomnia (para testes de API)
-- DBeaver (para visualização do banco de dados)
+- Java 11 ou superior
+- Maven 3.6 ou superior
+- PostgreSQL 12 ou superior
+- Insomnia (ou Postman) para testar a API
+- DBeaver (opcional, para visualizar o banco de dados)
 
 ## Principais Entidades
 
-- **Transacao**: Registra transações financeiras (receitas ou despesas)
-- **Categoria**: Classifica as transações (FIXA, VARIAVEL ou EXTRA)
-- **Usuario**: Proprietário das transações
+- **Transacao:** Registra transações financeiras (receitas ou despesas).
+- **Categoria:** Classifica as transações (FIXA, VARIAVEL ou EXTRA).
+- **Usuario:** Proprietário das transações.
 
 ### Categorização de Transações
 
 **Tipos de Categoria:**
-- `FIXA`: Despesas ou receitas que ocorrem regularmente
-- `VARIAVEL`: Despesas ou receitas que variam em valor ou frequência
-- `EXTRA`: Receitas extras ou não-recorrentes
+- `FIXA`: Despesas ou receitas que ocorrem regularmente.
+- `VARIAVEL`: Despesas ou receitas que variam em valor ou frequência.
+- `EXTRA`: Receitas/Despesas extras ou não recorrentes.
 
 **Categorias de Despesas:**
 - LAZER, EDUCACAO, MORADIA, TRANSPORTE, ALIMENTACAO, SAUDE, PRESENTES, PET, INVESTIMENTOS, ASSINATURAS, OUTROS
@@ -63,13 +67,13 @@ O projeto segue uma arquitetura em camadas:
 
 - Cadastro e autenticação de usuários (JWT)
 - Registro de receitas e despesas
-- Categorização das transações
+- Categorização de transações
 - Dashboard e relatórios
 - Exportação de dados
 
-## Endpoints Principais
+## Principais Endpoints
 
-```
+```http
 POST   /api/auth/login         # Autenticação (JWT)
 POST   /api/usuarios           # Cadastro de usuário
 GET    /api/transacoes         # Listar transações
@@ -77,6 +81,11 @@ POST   /api/transacoes         # Criar transação
 PUT    /api/transacoes/{id}    # Atualizar transação
 DELETE /api/transacoes/{id}    # Excluir transação
 ```
+
+> Para acessar endpoints protegidos, inclua o token JWT no header `Authorization`:
+> ```
+> Authorization: Bearer <seu_token_jwt>
+> ```
 
 ### Exemplo de Payload para Criação de Transação
 
@@ -145,10 +154,10 @@ Status 201 (Created) e objeto da transação criada.
 
 ## Visualização no Banco de Dados (DBeaver)
 
-- Tabela de transações armazena receitas e despesas categorizadas
-- Tabela de categorias com diferentes tipos para despesas e receitas
+- A tabela de transações armazena receitas e despesas categorizadas.
+- A tabela de categorias possui diferentes tipos para despesas e receitas.
 
-### Consulta SQL
+### Exemplos de Consulta SQL
 
 ```sql
 -- Consultar todas as transações
@@ -160,14 +169,14 @@ SELECT SUM(valor) FROM transacao WHERE tipo = 'DESPESA';
 -- Consultar total de receitas
 SELECT SUM(valor) FROM transacao WHERE tipo = 'RECEITA';
 
--- Consultar transações por categoria
-SELECT categoria, COUNT(*) FROM transacao GROUP BY categoria;
+-- Consultar quantidade de transações por categoria
+SELECT categoria_nome, COUNT(*) FROM transacao GROUP BY categoria_nome;
 ```
 
 ## Observações
 
-- As operações financeiras são corretamente categorizadas como receitas ou despesas
-- As transações são associadas a um usuário específico do sistema
-- Para acessar endpoints protegidos, inclua o token JWT no header Authorization
+- As operações financeiras são corretamente categorizadas como receitas ou despesas.
+- As transações são associadas a um usuário específico do sistema.
+- Para acessar endpoints protegidos, inclua o token JWT no header Authorization.
 
 ---
